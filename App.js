@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Slider, FlatList } from 'react-native';
 import { getData, getDimensions, MOTIVATION, PREPARATION, METHOD } from './Provider';
+import moment from 'moment';
 
 
 class SliderComponent extends React.Component {
@@ -35,17 +36,27 @@ class SliderComponent extends React.Component {
     const color = this.getColor(value);
 
     return (
-      <View style={[ styles.container, { backgroundColor: color } ]}>
-        <Text style={{ fontSize: 24 }}>{label} : {valueLabel} {unit && ' '+unit}</Text>
-        <Slider 
-          style={{ width:'100%' }} 
-          minimumValue={sliderMin} 
-          maximumValue={sliderMax} 
-          value={value} onValueChange={value => this.onValueChange(value)} 
-          step={step}
-          thumbTintColor='black'
-          minimumTrackTintColor='white'
-        />
+      <View style={[ styles.item, { backgroundColor: color } ]}>
+        <View style={{ flex: 1 }}>
+          <Text style={{ flex: 1, fontSize: 24 }}>{label}</Text>
+        </View>
+        <View style={{ flex: 2 }}>
+          <Text style={{ fontSize: 16 }}>
+            {valueLabel} {unit && ' '+unit}
+          </Text>
+        </View>
+        <View style={{ flex: 1 }}>
+        
+          <Slider 
+            style={{ flex: 1, width:'100%' }} 
+            minimumValue={sliderMin} 
+            maximumValue={sliderMax} 
+            value={value} onValueChange={value => this.onValueChange(value)} 
+            step={step}
+            thumbTintColor='black'
+            minimumTrackTintColor='white'
+          />
+        </View>
       </View>
     )
   }
@@ -78,15 +89,26 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        {this.state.fetched && <Text>Connected to Internet</Text>}
-        <FlatList 
-          data={this.state.dimensions} 
-          renderItem={({item}) => {
-            return (<SliderComponent
-              id={item.key}
-              value={this.state[item.key]}
-            />) 
-          }}/>
+        <View style={styles.header}>
+          <View>{this.state.fetched && <Text>Connected to Internet</Text>}</View>
+          <View style={{ alignItems : 'center', justifyContent : 'center' }}>
+            <Text style={{ fontSize: 40 }}>{moment().format('Do MMMM YYYY')}</Text>
+          </View>
+        </View>
+        <View style={styles.list}>
+          <ScrollView>
+          <FlatList 
+            data={this.state.dimensions} 
+            renderItem={({item}) => {
+              return (<SliderComponent
+                id={item.key}
+                value={this.state[item.key]}
+              />) 
+            }}/>
+          </ScrollView>
+        </View>
+        <View style={styles.footer}>
+        </View>
       </View>
     );
   }
@@ -102,5 +124,14 @@ const styles = StyleSheet.create({
   slider: {
     flex: 1,
     padding: 10
+  },
+  list: {
+    flex: 4
+  },
+  header: {
+    flex: 1
+  },
+  footer : {
+    flex: 1
   }
 });
