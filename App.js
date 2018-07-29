@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Slider, FlatList } from 'react-native';
-import { getData, getDimensions, setValue, getValues } from './Provider';
+import { StyleSheet, Text, View, ScrollView, Slider, FlatList, Alert, Button } from 'react-native';
+import { getData, getDimensions, setValue, getValues, clearAll } from './Provider';
+import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
 
 
@@ -15,14 +16,31 @@ class SliderComponent extends React.Component {
   }
 
   componentDidMount() {
-    getValues(this.props.id)
-      .then(value => value && this.setState({ value }) )
+    getValues(this.props.id, this.props.date)
+      .then(value => {
+        value && this.setState({ value }) 
+      })
       .catch(error => { throw error });
   }
 
   onValueChange(value) {
-    setValue(this.props.id, value);
-    this.setState({ value })
+
+    const alert = (error) => {
+      Alert.alert(
+        'Oups !',
+        "Une erreur s'est produite lors de l'enregistrement"+error && ' : '+error,
+        [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+        { cancelable: false }
+      );
+    };
+
+    this.setState({ value });
+
+    return setValue(this.props.id, this.props.date, value)
+      .then(result => {
+        !result && alert();
+      })
+      .catch(error => alert(error) );
   }
 
   getColor(value) {
@@ -77,27 +95,62 @@ export default class App extends React.Component {
     const values = {}
     dimensions.forEach( k => values[k] = 0);
     this.state = {
-      "fetched" : false,
+      storage: false,
+      internet : false,
+      date: moment().format('YYYYMMDD'),
       dimensions : dimensions,
       ...values
     }
   }
 
   componentDidMount() {
-    return fetch('http://google.com', {
-      method: 'GET'
-    }).then(result => {
-      this.setState({ fetched: true })
-    })
-    .catch(error => { throw new Error(error) })
+
+    fetch('http://google.com', { method: 'GET' })
+      .then(result => this.setState({ internet: true }))
+      .catch(error => { throw new Error(error) })
+    setValue("storageTest", moment().format('YYYYMMDD'), true)
+      .then(result => this.setState({ storage: result }))
+      .catch(error => this.setState({ storage: false }))
+  }
+
+  clearData() {
+
+    const alert = (error) => {
+      Alert.alert(
+        'Oups !',
+        "Une erreur s'est produite lors de l'enregistrement"+error && ' : '+error,
+        [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+        { cancelable: false }
+      );
+    };
+    
+    return clearAll()
+      .then(result => result ?
+          Alert.alert(
+            'Ok !',
+            "Les données ont bien été effacées",
+            [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+            { cancelable: false }
+          ) : 
+          alert()
+        )
+      .catch(error => alert(error));
   }
 
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <View>
-            {this.state.fetched && <Text>Connected to Internet</Text>}
+          <View style={{ flexDirection: 'row' }}>
+            {this.state.internet ? 
+              <Ionicons name='ios-wifi' size={25} color='green' /> :
+              <Ionicons name='ios-wifi' size={25} color='orange' />
+            }
+            {this.state.storage ? 
+              <Ionicons name='ios-disc' size={25} color='green' /> :
+              <Ionicons name='md-disc' size={25} color='red' />
+            }
+
           </View>
           <View style={ styles.header }>
             <Text style={{ fontSize: 40 }}>{moment().format('Do MMMM YYYY')}</Text>
@@ -110,12 +163,14 @@ export default class App extends React.Component {
             renderItem={({item}) => {
               return (<SliderComponent
                 id={item.key}
+                date={this.state.date}
                 value={this.state[item.key]}
               />) 
             }}/>
           </ScrollView>
         </View>
         <View style={styles.footer}>
+          <Button onPress={() => this.clearData()} title="Supprimer les données" />
         </View>
       </View>
     );
