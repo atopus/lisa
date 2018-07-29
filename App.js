@@ -10,7 +10,7 @@ class SliderComponent extends React.Component {
     this.state = {
       id: props.id,
       value: props.value || 0,
-      renderOptions: this.props.renderOptions || { step : 1, min :0, max : 10 }
+      renderOptions: this.props.renderOptions || { step : 1, min : 0, max : 10 }
     }
   }
 
@@ -32,7 +32,7 @@ class SliderComponent extends React.Component {
     const { step, min, max } = this.props.renderOptions || { step : 1, min :0, max : 10 };
     const sliderMin = dataMin || min || 0;
     const sliderMax = dataMax || max || scale && Object.keys(scale).length ;
-    const valueLabel = scale ? scale[parseInt(value)] : ''+value;
+    const valueLabel = scale ? scale[value] : ''+value;
     const color = this.getColor(value);
 
     return (
@@ -67,7 +67,6 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     const dimensions = getDimensions().map(d => ({ key: d }));
-    console.log(dimensions)
     const values = {}
     dimensions.forEach( k => values[k] = 0);
     this.state = {
@@ -90,8 +89,10 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <View>{this.state.fetched && <Text>Connected to Internet</Text>}</View>
-          <View style={{ alignItems : 'center', justifyContent : 'center' }}>
+          <View>
+            {this.state.fetched && <Text>Connected to Internet</Text>}
+          </View>
+          <View style={ styles.header }>
             <Text style={{ fontSize: 40 }}>{moment().format('Do MMMM YYYY')}</Text>
           </View>
         </View>
@@ -118,7 +119,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    // alignItems: 'center',
     justifyContent: 'center',
   },
   slider: {
@@ -129,7 +129,9 @@ const styles = StyleSheet.create({
     flex: 4
   },
   header: {
-    flex: 1
+    flex: 1,
+    alignItems : 'center', 
+    justifyContent : 'center'
   },
   footer : {
     flex: 1
