@@ -18,42 +18,42 @@ const DATA = {
   [WORKSTART] : {
     label: "Mise au travail",
     scale : {
-      1 : "Je bloque totalement. C'est trop violent 😭!😭  On me torture !😫😫😫😫😫😫",
+      1 : "Je bloque totalement. 😵 C'est trop violent 😭!😭  On me torture !😫😫😫😫😫😫",
       2 : "😩 Je résiste beaucoup au début. Je suis submergée 🤯 par la colère et l'émotion. J'y peux rien. 😩",
       3 : "Au début, j'appréhende 😣. Puis ça passe.",
       4 : "Je ne résiste pas, mais il me faut une contrainte (🍕) extérieure pour me lancer 😌",
-      5 : "Je me mets au travail... si quelqu'un me le rappelle",
-      6 : "Hein, j'ai passé du temps sur Youtube ? Mais c'est trop mignoooon ! ",
-      7 : "Je m'y mets seule... lorsque je m'aperçois que la limite approche",
-      8 : "J'ai planifié mon travail, et je parviens à peu près à m'y tenir",
-      9 : "J'ai planifié mon travail, et m'y tiens régulièrement",
-      10 : "J'ai planifié mon travail, et m'y tiens entièrement",
-      11 : "J'étudie avec entrain et plaisir. Ce n'est plus du travail, mais dans la continuité de ce que j'aime faire"
+      5 : "Je me mets au travail 😊... si quelqu'un me le rappelle 😭",
+      6 : "Hein, j'ai passé du temps sur Youtube 😳? Mais c'est trop mignoooon 😻😻😻😻! ",
+      7 : "Je m'y mets seule 👌👍... lorsque je m'aperçois que la limite approche 👮‍♀️",
+      8 : "J'ai planifié mon travail 📅, et je parviens à peu près à m'y tenir",
+      9 : "J'ai planifié mon travail 📅, et m'y tiens régulièrement ⌛",
+      10 : "J'ai planifié mon travail 📅, et m'y tiens entièrement",
+      11 : "J'étudie sans m'en rendre compte 🤗"
     },
     thresholds : [3, 6, 8]
   },
   [REALISATION] : {
     label: "Réalisation",
     scale : {
-      1 : "Soyons clair : je n'ai rien fait.",
-      2 : "Bon. Au moins, j'ai commencé un truc...",
-      3 : "Disons que j'ai réalisé le tiers du travail que je devais accomplir",
-      4 : "J'ai réalisé la moitié du travail que je devais accomplir. C'est toujours ça.",
-      5 : "J'ai réalisé les 2/3 du travail je devais accomplir. Yes ! Je suis sur la bonne pente !",
+      1 : "Soyons clair : je n'ai rien fait 😒.",
+      2 : "Bon. Au moins, j'ai commencé un truc... 😩",
+      3 : "Disons que j'ai réalisé le tiers du travail que je devais accomplir , j'en peux plus 😪",
+      4 : "J'ai réalisé la moitié du travail que je devais accomplir. C'est toujours ça.🙂",
+      5 : "J'ai réalisé les 2/3 du travail je devais accomplir. Yes ! Je suis sur la bonne pente 😄!",
       6 : "J'ai presque fini mais me suis arrêté juste avant la fin. La flemme, peut-être... On va pas en faire un plat",
       7 : "J'ai tout terminé. C'est pas que je suis trop forte, c'est juste que c'est trop facile...",
-      8 : "les doigts dans le nez",
+      8 : "les doigts dans le nez 😎 ",
       9 : " je viens de travailler sans m'en rendre compte 😀",
-      10 : "au secours, je m'ennuie, je n'ai plus de travail à faire."
+      10 : "au secours 😫, je m'ennuie 😴, je n'ai plus de travail à faire 😜."
     },
     thresholds : [4, 6, 8]
   },
   [METHOD] : {
     label : "Méthode",
     scale : {
-      1 : "La... ? méthode ? C'est quoi ???",
-      2 : "C'est ça la méthode ? Bof. Je préfère foncer direct, c'est mieux !",
-      3 : "D'accord, la méthode, c'est bien, mais seulement quand je bloque. Sinon, c'est trop genre une perte de temps.",
+      1 : "La... ? 🤪 méthode ? C'est quoi 🤔 ??? ça se mange 😧 ?",
+      2 : "C'est ça la méthode ? Bof. Je préfère ma technique, c'est mieux !",
+      3 : "D'accord, la méthode, ça a l'air bien, mais seulement quand je bloque. Sinon, c'est trop genre une perte de temps.",
       4 : "Mouais... C'est peut-être utile. Faut voir...",
       5 : "Mince, c'est vrai que c'est plus simple avec un peu de méthode !",
       6 : "T'as pas de méthode ?? Non mais allô quoi !",
@@ -139,7 +139,8 @@ const DATA = {
       8 : "I understand and sing my favorite songs",
       9 : "I really don't need to be evaluated any more. It's natural.",
       10 : "Look, I do think we should practice our english on a regular basis. Let's start right now !"
-    }
+    },
+    thresholds : [3, 5, 6]
   }
 }
 
