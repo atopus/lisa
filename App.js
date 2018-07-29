@@ -2,8 +2,9 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Slider, FlatList, Alert, Button } from 'react-native';
 import { getData, getDimensions, setValue, getValues, clearAll } from './Provider';
 import { Ionicons } from '@expo/vector-icons';
-import moment from 'moment';
+import moment from 'moment/min/moment-with-locales';
 
+moment.locale('fr')
 
 class SliderComponent extends React.Component {
   constructor(props) {
