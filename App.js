@@ -61,12 +61,12 @@ class SliderComponent extends React.Component {
     const color = this.getColor(value);
 
     return (
-      <View style={[ styles.item, { backgroundColor: color } ]}>
-        <View style={{ flex: 1 }}>
-          <Text style={{ flex: 1, fontSize: 24 }}>{label}</Text>
+      <View style={[ styles.item, { borderLeftColor: color } ]}>
+        <View style={{ flex: 1, paddingHorizontal : 10 }}>
+          <Text style={{ flex: 1, fontSize: 24 }}>{label} :</Text>
         </View>
-        <View style={{ flex: 2 }}>
-          <Text style={{ fontSize: 16 }}>
+        <View style={{ flex: 2, paddingHorizontal: 10, paddingVertical: 5 }}>
+          <Text style={{ fontSize: 16, minHeight: 35, color: 'grey' }}>
             {valueLabel} {unit && ' '+unit}
           </Text>
         </View>
@@ -78,8 +78,8 @@ class SliderComponent extends React.Component {
             maximumValue={sliderMax} 
             value={value} onValueChange={value => this.onValueChange(value)} 
             step={step}
-            thumbTintColor='black'
-            minimumTrackTintColor='white'
+            thumbTintColor={color}
+            minimumTrackTintColor={color}
           />
         </View>
       </View>
@@ -169,9 +169,9 @@ export default class App extends React.Component {
             }}/>
           </ScrollView>
         </View>
-        <View style={styles.footer}>
+        {/* <View style={styles.footer}> */}
           {/* <Button onPress={() => this.clearData()} title="Supprimer les données" /> */}
-        </View>
+        {/* </View> */}
       </View>
     );
   }
@@ -189,6 +189,10 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 4
+  },
+  item : {
+    borderLeftWidth : 6,
+    paddingBottom: 10
   },
   header: {
     flex: 1,
