@@ -44,11 +44,20 @@ class SliderComponent extends React.Component {
       .catch(error => alert(error) );
   }
 
-  getColor(value) {
-    if(value < 2.5) return '#A10800';
-      else if(value < 4) return 'orange';
-      else if(value < 7) return '#FFE700';
-      else return '#D5F800'; 
+  getColor(value, thresholds) {
+
+    const COLORS = [
+      '#A10800', // red.
+      'orange',  // orange
+      '#FFE700', // yellow
+      '#D5F800'  // light green
+    ]
+
+    const thr = thresholds || [3, 4, 7];
+
+    let i = thr.findIndex(v => v > value);
+    i = i > -1 ? i : COLORS.length - 1;
+    return COLORS[i];
   }
 
   render() {
@@ -56,10 +65,10 @@ class SliderComponent extends React.Component {
     const value = this.state.value;
     const { label, scale, dataMin, dataMax, unit } = data;
     const { step, min, max } = this.props.renderOptions || { step : 1, min :0, max : 10 };
-    const sliderMin = dataMin || min || 0;
-    const sliderMax = dataMax || max || scale && Object.keys(scale).length ;
+    const sliderMin = dataMin || scale && Math.min.apply(1, Object.keys(scale)) || min || 0;
+    const sliderMax = dataMax || scale && Math.max.apply(0, Object.keys(scale)) || max ;
     const valueLabel = scale ? scale[value] : ''+value;
-    const color = this.getColor(value);
+    const color = this.getColor(value, data.thresholds);
 
     return (
       <View style={[ styles.item, { borderLeftColor: color } ]}>

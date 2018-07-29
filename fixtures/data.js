@@ -29,7 +29,8 @@ const DATA = {
       9 : "J'ai planifié mon travail, et m'y tiens régulièrement",
       10 : "J'ai planifié mon travail, et m'y tiens entièrement",
       11 : "J'étudie avec entrain et plaisir. Ce n'est plus du travail, mais dans la continuité de ce que j'aime faire"
-    }
+    },
+    thresholds : [3, 6, 8]
   },
   [REALISATION] : {
     label: "Réalisation",
@@ -44,7 +45,8 @@ const DATA = {
       8 : "les doigts dans le nez",
       9 : " je viens de travailler sans m'en rendre compte 😀",
       10 : "au secours, je m'ennuie, je n'ai plus de travail à faire."
-    }
+    },
+    thresholds : [4, 6, 8]
   },
   [METHOD] : {
     label : "Méthode",
@@ -57,7 +59,8 @@ const DATA = {
       6 : "T'as pas de méthode ? Non mais allô quoi !",
       7 : "J'ai préparé mon travail à l'avance, et ai appliqué la méthode que je connais",
       8 : "Je réajuste ma méthode en fonction de mes résultats, de mes contraintes et de mes besoins",
-    }
+    },
+    thresholds : [4, 5, 7]
   },
   // [MOTIVATION] : {
   //   label : MOTIVATION,
