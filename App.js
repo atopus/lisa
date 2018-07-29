@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Slider, FlatList } from 'react-native';
-import { getData, getDimensions, MOTIVATION, PREPARATION, METHOD } from './Provider';
+import { getData, getDimensions, setValue, getValues } from './Provider';
 import moment from 'moment';
 
 
@@ -14,7 +14,14 @@ class SliderComponent extends React.Component {
     }
   }
 
+  componentDidMount() {
+    getValues(this.props.id)
+      .then(value => value && this.setState({ value }) )
+      .catch(error => { throw error });
+  }
+
   onValueChange(value) {
+    setValue(this.props.id, value);
     this.setState({ value })
   }
 
