@@ -1,8 +1,9 @@
 # Lisa
 
-In the foreground, ,"Lisa" is designed to help a high school student monitor his mood and habits, and eventually get a solid basis of best learning practices.
+Lisa is a two-fold side-project :
 
-In the background, this app is a basic playground (as simple as a todo app) intended to explore and get acquainted with the core features of a react native. It aims at being a state-of-the-art app, including full test & documentation.
+1. In the foreground, it is designed to help a high school student monitor his mood and habits, and eventually get a solid basis of best learning practices.
+2. In the background, it is a basic playground (as simple as a todo app) intended to explore and get acquainted with the core features of a react native. It aims at being a state-of-the-art app, including full test & documentation.
 
 ## Features
 
@@ -21,6 +22,8 @@ and along the main knowledge fields, like :
 * History ;
 * and english.
 
+Other fields will soon be added to comply with the french Education Nationale teaching program.
+
 ## Setup
 
 create-react-native-app has been used to create the repo. 
@@ -31,6 +34,7 @@ Simply git clone this repo, and run `yarn install`.
 
 Quality improvments :
 
+* Webpack integration ;
 * Tests ;
 * Documentation ;
 
@@ -40,3 +44,15 @@ Features :
 * Graphics in order to ;
 * customable notification ;
 * online sync, with redux & redux-offline ;
+
+Later :
+
+* Internationalization ;
+
+## Contributions
+
+PR are welcome.
+
+## Licence
+
+MIT
