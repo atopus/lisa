@@ -24,6 +24,12 @@ and along the main knowledge fields, like :
 
 Other fields will soon be added to comply with the french Education Nationale teaching program.
 
+## Data
+
+A full working data set is provided in french.
+
+Data can be edited from the file `./fixtures/data.js`.
+
 ## Setup
 
 create-react-native-app has been used to create the repo. 
