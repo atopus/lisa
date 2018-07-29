@@ -170,7 +170,7 @@ export default class App extends React.Component {
           </ScrollView>
         </View>
         <View style={styles.footer}>
-          <Button onPress={() => this.clearData()} title="Supprimer les données" />
+          {/* <Button onPress={() => this.clearData()} title="Supprimer les données" /> */}
         </View>
       </View>
     );
