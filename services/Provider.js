@@ -1,5 +1,5 @@
 import { AsyncStorage } from 'react-native';
-import DATA from './fixtures/data';
+import DATA from './data';
 
 const PREFIX = '@lisa';
 
