@@ -89,56 +89,80 @@ class Main extends React.Component {
     this.props.setDate(newDate.format('YYYYMMDD'));
   }
 
+  renderControl() {
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        {this.props.internet ? 
+          <Ionicons name='ios-wifi' size={25} color='green' /> :
+          <Ionicons name='ios-wifi' size={25} color='orange' />
+        }
+        {this.props.storage ? 
+          <Ionicons name='md-disc' size={25} color='green' /> :
+          <Ionicons name='md-disc' size={25} color='red' />
+        }
+      </View>
+    )
+  }
+
+  renderHeaderDate() {
+    return (
+      <View style={ styles.header }>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          <View>
+            <FAIcon.Button size={12} backgroundColor='#ddd'
+              name="chevron-left"
+              onPress={() => this.previousDate()}
+            ></FAIcon.Button>
+          </View>  
+          <View style={{ paddingHorizontal: 20 }}>
+            <Text style={{ fontSize: 40 }}>
+              {moment(this.props.date, 'YYYYMMDD').format('Do MMMM YYYY')}
+            </Text>
+          </View>
+          <View>
+            <FAIcon.Button size={12} backgroundColor='#ddd'
+              name="chevron-right"
+              onPress={() => this.nextDate()}
+            ></FAIcon.Button>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
+  renderHeader() {
+    return (
+      <View style={styles.header}>
+        {this.renderControl()}
+        {this.renderHeaderDate()}
+      </View>
+    )
+  }
+
+  renderList() {
+    return (
+      <View style={styles.list}>
+        <ScrollView>
+          <FlatList 
+            data={this.props.dimensions}
+            renderItem={({item}) => {
+              return (
+                <SliderComponent
+                  id={item.key}
+                  date={this.props.date}
+              />) 
+            }}/>
+        </ScrollView>
+      </View>
+    )
+  }
+
   render() {
 
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={{ flexDirection: 'row' }}>
-            {this.props.internet ? 
-              <Ionicons name='ios-wifi' size={25} color='green' /> :
-              <Ionicons name='ios-wifi' size={25} color='orange' />
-            }
-            {this.props.storage ? 
-              <Ionicons name='md-disc' size={25} color='green' /> :
-              <Ionicons name='md-disc' size={25} color='red' />
-            }
-          </View>
-          <View style={ styles.header }>
-            <View style={{ flex: 1, flexDirection: 'row' }}>
-              <View>
-                <FAIcon.Button size={12} backgroundColor='#ddd'
-                  name="chevron-left"
-                  onPress={() => this.previousDate()}
-                ></FAIcon.Button>
-              </View>  
-              <View style={{ paddingHorizontal: 20 }}>
-                <Text style={{ fontSize: 40 }}>
-                  {moment(this.props.date, 'YYYYMMDD').format('Do MMMM YYYY')}
-                </Text>
-              </View>
-              <View>
-                <FAIcon.Button size={12} backgroundColor='#ddd'
-                  name="chevron-right"
-                  onPress={() => this.nextDate()}
-                ></FAIcon.Button>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View style={styles.list}>
-          <ScrollView>
-            <FlatList 
-              data={this.props.dimensions}
-              renderItem={({item}) => {
-                return (
-                  <SliderComponent
-                    id={item.key}
-                    date={this.props.date}
-                />) 
-              }}/>
-          </ScrollView>
-        </View>
+        {this.renderHeader()}
+        {this.renderList()}
       </View>
     )}
 }
