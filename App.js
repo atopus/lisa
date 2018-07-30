@@ -6,6 +6,8 @@ import { Provider } from 'react-redux';
 import reducer from './reducers';
 import Main from './screens/Main';
 
+import { createStackNavigator } from 'react-navigation';
+
 const persistedState = {};
 
 const middleware = applyMiddleware(thunk);
@@ -15,12 +17,18 @@ const store = createStore(
   composeWithDevTools(middleware)
 )
 
+const RootStack = createStackNavigator({
+  Home: {
+    screen: Main
+  },
+})
+
 export default class App extends React.Component {
 
   render() {
     return (
       <Provider store={store}>
-        <Main />
+        <RootStack />
       </Provider>
     );
   }

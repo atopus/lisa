@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { getData } from '../services/Provider';
-import { Text, View, Slider, Alert } from 'react-native';
+import { Text, View, Slider, Alert, TouchableHighlight } from 'react-native';
 import styles from '../Styles';
 
 import {
@@ -89,29 +89,34 @@ class SliderComponent extends React.Component {
     }
 
     return (
-      <View style={[ styles.item, { borderLeftColor: color } ]}>
-        <View style={{ flex: 1, paddingHorizontal : 10 }}>
-          <Text style={{ flex: 1, fontSize: 24 }}>{label} :</Text>
-        </View>
-        <View style={{ flex: 2, paddingHorizontal: 10, paddingVertical: 5 }}>
-          <Text style={{ fontSize: 16, minHeight: 35, color: 'grey' }}>
-            {valueLabel} {unit && ' '+unit}
-          </Text>
-        </View>
-        <View style={{ flex: 1 }}>
-        
-          <Slider 
-            style={{ flex: 1, width:'100%' }} 
-            minimumValue={sliderMin} 
-            maximumValue={sliderMax} 
-            value={value} onValueChange={value => this.onValueChange(value)} 
-            step={step}
-            thumbTintColor={color}
-            minimumTrackTintColor={color}
-          />
+      <TouchableHighlight 
+        onPress={() => Alert.alert("You tapped me !")}
+        underlayColor='yellow'
+      >
+        <View style={[ styles.item, { borderLeftColor: color } ]}>
+          <View style={{ flex: 1, paddingHorizontal : 10 }}>
+            <Text style={{ flex: 1, fontSize: 24 }}>{label} :</Text>
+          </View>
+          <View style={{ flex: 2, paddingHorizontal: 10, paddingVertical: 5 }}>
+            <Text style={{ fontSize: 16, minHeight: 35, color: 'grey' }}>
+              {valueLabel} {unit && ' '+unit}
+            </Text>
+          </View>
+          <View style={{ flex: 1 }}>
+          
+            <Slider 
+              style={{ flex: 1, width:'100%' }} 
+              minimumValue={sliderMin} 
+              maximumValue={sliderMax} 
+              value={value} onValueChange={value => this.onValueChange(value)} 
+              step={step}
+              thumbTintColor={color}
+              minimumTrackTintColor={color}
+            />
 
+          </View>
         </View>
-      </View>
+      </TouchableHighlight>
     )
   }
 }

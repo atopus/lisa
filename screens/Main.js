@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Text, View, ScrollView, Slider, FlatList, Alert } from 'react-native';
+import { Text, View, ScrollView, Button, FlatList, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 
@@ -41,6 +41,14 @@ const mapDispatchToProps = {
 };
 
 class Main extends React.Component {
+
+  static navigationOptions = {
+    title: 'Home',
+    headerStyle : {
+      backgroundColor: 'orange'
+    },
+    headerTintColor : '#fff',
+  };
 
   componentDidMount() {
     // Internet & localStorage availability is checked on mount because Android

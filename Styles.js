@@ -11,7 +11,7 @@ export default StyleSheet.create({
     padding: 10
   },
   list: {
-    flex: 4
+    flex: 5
   },
   item : {
     borderLeftWidth : 6,
