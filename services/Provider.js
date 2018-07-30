@@ -6,12 +6,28 @@ const PREFIX = '@lisa';
 export const getData = key => DATA[key];
 export const getDimensions = () => Object.keys(DATA);
 
+export const getValues = async (id) => {
+  try {
+
+    if(typeof id !== 'string') throw new Error("id must be a string. Received "+id);
+
+    const rawValues = await AsyncStorage.getItem(`${PREFIX}-${id}`);
+    const values = JSON.parse(rawValues);
+    if(values !== null) return values;
+    else return false;
+    
+  } catch(error) {
+    console.error(error)
+    return false
+  }
+}
+
 /**
  * 
  * @param {string} id 
  * @param {string} date YYYYMMDD 
  */
-export const getValues = async (id, date) => {
+export const getValue = async (id, date) => {
 
   try {
 

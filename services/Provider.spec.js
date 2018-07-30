@@ -24,13 +24,13 @@ describe("When there is a value", async () => {
     let result = await fromProvider.setValue('test', TODAY, 'TEST WRITE')
     expect(result).toBeTruthy();
 
-    let values = await fromProvider.getValues('test', TODAY)
+    let values = await fromProvider.getValue('test', TODAY)
     expect(values).toEqual('TEST')
   });
 
   it('can record a new value', async () => {
 
-    let values = await fromProvider.getValues('test', TODAY)
+    let values = await fromProvider.getValue('test', TODAY)
     expect(values).toEqual('TEST')
       
   });

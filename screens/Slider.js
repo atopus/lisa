@@ -1,28 +1,38 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Slider, FlatList, Alert, Button } from 'react-native';
-import { getData, getDimensions, setValue, getValues, clearAll } from '../services/Provider';
-import { Ionicons, FontAwesome } from '@expo/vector-icons';
-import moment from 'moment/min/moment-with-locales';
+import { connect } from 'react-redux';
+import { getData } from '../services/Provider';
+import { Text, View, Slider, Alert } from 'react-native';
 import styles from '../Styles';
 
+import {
+  getDate,
+  getValue
+} from '../reducers';
+import {
+  saveValue,
+  loadValues
+} from '../actions/dimensions';
+
+import moment from 'moment/min/moment-with-locales';
 moment.locale('fr');
 
+const mapStateToProps = (state, ownProps) => ({
+  id: ownProps.id,
+  value: getValue(state, ownProps.id, getDate(state)),
+  date: ownProps.date
+});
+
+const mapDispatchToProps = {
+  setValue: saveValue,
+  loadValues: loadValues
+}
+
 class SliderComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      id: props.id,
-      value: props.value || 0,
-      renderOptions: this.props.renderOptions || { step : 1, min : 0, max : 10 }
-    }
-  }
 
   componentDidMount() {
-    getValues(this.props.id, this.props.date)
-      .then(value => {
-        value && this.setState({ value }) 
-      })
-      .catch(error => { throw error });
+    if(!this.props.value) {
+      this.props.loadValues(this.props.id);
+    }
   }
 
   onValueChange(value) {
@@ -35,10 +45,8 @@ class SliderComponent extends React.Component {
         { cancelable: false }
       );
     };
-
-    this.setState({ value });
-
-    return setValue(this.props.id, this.props.date, value)
+    
+    return this.props.setValue(this.props.id, this.props.date, value)
       .then(result => {
         !result && alert();
       })
@@ -63,13 +71,22 @@ class SliderComponent extends React.Component {
 
   render() {
     const data = getData(this.props.id);
-    const value = this.state.value;
+    if(!data) throw new Error("Could not fetch dimension data of "+this.props.id);
     const { label, scale, dataMin, dataMax, unit } = data;
     const { step, min, max } = this.props.renderOptions || { step : 1, min :0, max : 10 };
     const sliderMin = dataMin || scale && Math.min.apply(1, Object.keys(scale)) || min || 0;
     const sliderMax = dataMax || scale && Math.max.apply(0, Object.keys(scale)) || max ;
-    const valueLabel = scale ? scale[value] : ''+value;
-    const color = this.getColor(value, data.thresholds);
+
+    let value = this.props.value;
+    let valueLabel;
+    let color;
+    valueLabel = scale ? scale[value] : ''+value;
+    if(value === false) {
+      color = 'lightgrey';
+      value = 0;
+    } else {
+      color = this.getColor(value, data.thresholds);
+    }
 
     return (
       <View style={[ styles.item, { borderLeftColor: color } ]}>
@@ -92,10 +109,14 @@ class SliderComponent extends React.Component {
             thumbTintColor={color}
             minimumTrackTintColor={color}
           />
+
         </View>
       </View>
     )
   }
 }
 
-export default SliderComponent
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SliderComponent)
