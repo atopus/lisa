@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { getData } from '../services/Provider';
-import { Text, View, Slider, Alert, TouchableHighlight } from 'react-native';
-import styles from '../Styles';
+import { Text, View, Slider, Alert, TouchableHighlight, StyleSheet } from 'react-native';
+import Styles, * as StyleVariables from '../Styles';
 
 import {
   getDate,
@@ -56,10 +56,10 @@ class SliderComponent extends React.Component {
   getColor(value, thresholds) {
 
     const COLORS = [
-      '#A10800', // red.
-      'orange',  // orange
-      '#FFE700', // yellow
-      '#D5F800'  // light green
+      StyleVariables.danger, // red.
+      StyleVariables.warning,  // orange
+      StyleVariables.info, // yellow
+      StyleVariables.success  // light green
     ]
 
     const thr = thresholds || [3, 4, 7];
@@ -82,7 +82,7 @@ class SliderComponent extends React.Component {
     let color;
     valueLabel = scale ? scale[value] : ''+value;
     if(value === false) {
-      color = 'lightgrey';
+      color = StyleVariables.lightgrey;
       value = 0;
     } else {
       color = this.getColor(value, data.thresholds);
@@ -91,9 +91,9 @@ class SliderComponent extends React.Component {
     return (
       <TouchableHighlight 
         onPress={() => Alert.alert("You tapped me !")}
-        underlayColor='yellow'
+        underlayColor={StyleVariables.info}
       >
-        <View style={[ styles.item, { borderLeftColor: color } ]}>
+        <View style={[ Styles.item, { borderLeftColor: color } ]}>
           <View style={{ flex: 1, paddingHorizontal : 10 }}>
             <Text style={{ flex: 1, fontSize: 24 }}>{label} :</Text>
           </View>
@@ -105,7 +105,7 @@ class SliderComponent extends React.Component {
           <View style={{ flex: 1 }}>
           
             <Slider 
-              style={{ flex: 1, width:'100%' }} 
+              style={ styles.slider } 
               minimumValue={sliderMin} 
               maximumValue={sliderMax} 
               value={value} onValueChange={value => this.onValueChange(value)} 
@@ -120,6 +120,16 @@ class SliderComponent extends React.Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container : {
+
+  },
+  slider : {
+    flex: 1,
+    width: '100%'
+  }
+})
 
 export default connect(
   mapStateToProps,
