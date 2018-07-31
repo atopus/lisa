@@ -39,7 +39,10 @@ export const saveValue = (uid, date, value) => dispatch => {
       if(result) {
         dispatch({
           type: SET_VALUE_SUCCESS,
-          payload: { uid, date, value }
+          payload: { 
+            uid, 
+            value: { date, value }
+          }
         })
         return true
       } else {
