@@ -1,4 +1,3 @@
-import { combineReducers } from 'redux'
 import {
   LOAD_DIMENSIONS_SUCCESS,
   ADD_DIMENSION_SUCCESS,
@@ -194,7 +193,4 @@ const dimensions = (state = [], action) => {
   }
 }
 
-// export default combineReducers({
-//   dimensions
-// })
 export default dimensions
