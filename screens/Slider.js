@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getData } from '../services/Provider';
 import { Text, View, Slider, Alert, TouchableHighlight } from 'react-native';
 import styles from '../Styles';
 
 import {
   getDate,
-  getValue
+  getValue,
+  getDimension
 } from '../reducers';
 import {
   saveValue,
@@ -16,11 +16,13 @@ import {
 import moment from 'moment/min/moment-with-locales';
 moment.locale('fr');
 
-const mapStateToProps = (state, ownProps) => ({
-  id: ownProps.id,
-  value: getValue(state, ownProps.id, getDate(state)),
-  date: ownProps.date
-});
+const mapStateToProps = (state, props) => {
+  return {
+    dimension : getDimension(state, props.uid),
+    value : getValue(state, props.uid, getDate(state)),
+    date: props.date
+  }
+};
 
 const mapDispatchToProps = {
   setValue: saveValue,
@@ -31,7 +33,7 @@ class SliderComponent extends React.Component {
 
   componentDidMount() {
     if(!this.props.value) {
-      this.props.loadValues(this.props.id);
+      this.props.loadValues(this.props.dimension.uid);
     }
   }
 
@@ -46,14 +48,16 @@ class SliderComponent extends React.Component {
       );
     };
     
-    return this.props.setValue(this.props.id, this.props.date, value)
+    return this.props.setValue(this.props.dimension.uid, this.props.date, value)
       .then(result => {
         !result && alert();
       })
       .catch(error => alert(error) );
   }
 
-  getColor(value, thresholds) {
+  _getColor(value, thresholds) {
+
+    if(!value) return 'lightgrey';
 
     const COLORS = [
       '#A10800', // red.
@@ -69,49 +73,55 @@ class SliderComponent extends React.Component {
     return COLORS[i];
   }
 
-  render() {
-    const data = getData(this.props.id);
-    if(!data) throw new Error("Could not fetch dimension data of "+this.props.id);
-    const { label, scale, dataMin, dataMax, unit } = data;
-    const { step, min, max } = this.props.renderOptions || { step : 1, min :0, max : 10 };
-    const sliderMin = dataMin || scale && Math.min.apply(1, Object.keys(scale)) || min || 0;
-    const sliderMax = dataMax || scale && Math.max.apply(0, Object.keys(scale)) || max ;
+  _getOptionLabel(value, options) {
+    if(value) {
+      
+      const option = options.find(option => option.index === value)
+      
+      if(!option) {
+        throw new Error(`Unable to find option for dimension ${this.props.dimension.uid} and value ${value}`)
+      }
+      
+      return option.text
 
-    let value = this.props.value;
-    let valueLabel;
-    let color;
-    valueLabel = scale ? scale[value] : ''+value;
-    if(value === false) {
-      color = 'lightgrey';
-      value = 0;
-    } else {
-      color = this.getColor(value, data.thresholds);
-    }
+    } else return '--'
+  }
+
+  render() {
+
+    const indices = this.props.dimension.options.map(option => option.index)
+    const min = Math.min.apply(0, indices)
+    const max = Math.max.apply(0, indices)
+    const valueLabel = this._getOptionLabel(this.props.value, this.props.dimension.options)
+
+    color = this._getColor(this.props.value, this.props.dimension.thresholds);
+    const sliderValue = this.props.value !== false ? this.props.value : 0
 
     return (
       <TouchableHighlight 
         onPress={() => this.props.navigation.navigate('Dimension', {
-          dimensionId: this.props.id
+          dimensionId: this.props.dimension.uid
         })}
         underlayColor='yellow'
       >
         <View style={[ styles.item, { borderLeftColor: color } ]}>
           <View style={{ flex: 1, paddingHorizontal : 10 }}>
-            <Text style={{ flex: 1, fontSize: 24 }}>{label} :</Text>
+            <Text style={{ flex: 1, fontSize: 24 }}>{this.props.dimension.label} :</Text>
           </View>
           <View style={{ flex: 2, paddingHorizontal: 10, paddingVertical: 5 }}>
             <Text style={{ fontSize: 16, minHeight: 35, color: 'grey' }}>
-              {valueLabel} {unit && ' '+unit}
+              {valueLabel}
             </Text>
           </View>
           <View style={{ flex: 1 }}>
           
             <Slider 
               style={{ flex: 1, width:'100%' }} 
-              minimumValue={sliderMin} 
-              maximumValue={sliderMax} 
-              value={value} onValueChange={value => this.onValueChange(value)} 
-              step={step}
+              minimumValue={min} 
+              maximumValue={max} 
+              value={sliderValue} 
+              onValueChange={value => this.onValueChange(value)} 
+              step={1}
               thumbTintColor={color}
               minimumTrackTintColor={color}
             />

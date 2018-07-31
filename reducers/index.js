@@ -70,22 +70,30 @@ const home = (state = { date : moment().format('YYYYMMDD') }, action) => {
   }
 }
 
-
 export default combineReducers({
   app,
   home,
   dimensions
 })
 
-export const getValue = (state, uid, date) => 
-  state.dimensions[uid] && 
-  state.dimensions[uid].values &&
-  state.dimensions[uid].values[date] ? 
-    state.dimensions[uid].values[date] :
-    false
+export const getDimensions = state => 
+  fromDimensions.getDimensions(state.dimensions)
 
-export const getValues = (state, uid) => state.dimensions[uid].values
-export const getDimensions = state => Object.keys(state.dimensions)
+export const getDimension = (state, uid) => 
+  fromDimensions.getDimension(state.dimensions, uid)
+
+export const getValues = (state, uid) => 
+  fromDimensions.getValues(state.dimensions, uid)
+
+export const getValue = (state, uid, date) => 
+  fromDimensions.getValue(state.dimensions, uid, date)
+
+export const getOptions = (state, uid) => 
+  fromDimensions.getOptions(state.dimensions, uid)
+
+export const getThresholds = (state, uid) =>
+  fromDimensions.getThresholds(state.dimensions, uid)
+
 
 export const getDate = state => state.home.date
 export const getDimensionScale = (state, dimensionId) =>

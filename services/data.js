@@ -16,8 +16,9 @@ export const GREC = 'grec';
 
 const DATA = {
   [WORKSTART] : {
+    uid: WORKSTART,
     label: "Mise au travail",
-    scale : {
+    options : {
       1 : "Je bloque totalement. 😵 C'est trop violent 😭!😭  On me torture !😫😫😫😫😫😫",
       2 : "😩 Je résiste beaucoup au début. Je suis submergée 🤯 par la colère et l'émotion. J'y peux rien. 😩",
       3 : "Au début, j'appréhende 😣. Puis ça passe.",
@@ -33,8 +34,9 @@ const DATA = {
     thresholds : [3, 6, 8]
   },
   [REALISATION] : {
+    uid: REALISATION,
     label: "Réalisation",
-    scale : {
+    options : {
       1 : "Soyons clair : je n'ai rien fait 😒.",
       2 : "Bon. Au moins, j'ai commencé un truc... 😩",
       3 : "Disons que j'ai réalisé le tiers du travail que je devais accomplir , j'en peux plus 😪",
@@ -49,8 +51,9 @@ const DATA = {
     thresholds : [4, 6, 8]
   },
   [METHOD] : {
+    uid: METHOD,
     label : "Méthode",
-    scale : {
+    options : {
       1 : "La... ? 🤪 méthode ? C'est quoi 🤔 ??? ça se mange 😧 ?",
       2 : "C'est ça la méthode ? Bof. Je préfère ma technique, c'est mieux !",
       3 : "D'accord, la méthode, ça a l'air bien, mais seulement quand je bloque. Sinon, c'est trop genre une perte de temps.",
@@ -63,15 +66,26 @@ const DATA = {
     thresholds : [4, 5, 7]
   },
   [ENDURANCE]  :{
+    uid: ENDURANCE,
     label: "Endurance / concentration",
-    min : 0,
-    max: 8,
-    unit: 'heure(s)',
+    options : {
+      1: "5 minutes, t'es fou ?",
+      2: "15 minutes, c'est mon dernier mot. Avant la sieste",
+      3: "30 minutes. Mon record.",
+      4: "1h. Passe-moi l'aspirine.",
+      5: "1h30. Avant les 10h de pause.",
+      6: "2h. Et je l'ai posté sur Instagram.",
+      7: "3h. Cool.",
+      8: "5h. Va falloir que je pense à me faire payer.",
+      9: "6, 7 ou 8h. J'ai pas compté.",
+      10: "8h. J'aurais dû déjeuner à midi."
+    },
     thresholds: [1, 3, 4]
   },
   [CONSCIOUSNESS] : {
+    uid: CONSCIOUSNESS,
     label: "Conscience de soi",
-    scale: {
+    options : {
       1 : "Les profs, c'est tous des NULS !",
       2 : "J'veux pas savoir !",
       3 : "J'y arriverai jamais !!",
@@ -85,8 +99,9 @@ const DATA = {
     thresholds: [3, 5, 7]
   },
   [MATHS] : {
+    uid: MATHS,
     label: "Mathématiques",
-    scale : {
+    options : {
       1 : "Plus JAMAIS !",
       2 : "C'est simple : j'y pige rien.",
       3 : "Pourquoi, au juste ?",
@@ -100,8 +115,9 @@ const DATA = {
     thresholds : [4, 6, 7]
   },
   [FRANCAIS] : {
+    uid: FRANCAIS,
     label: "Français",
-    scale : {
+    options : {
       1 : "c tro dur",
       2 : "Plus d'une erreur d'orthographe pour 30 mots",
       3 : "Moins d'une erreur d'orthographe pour 30 mots",
@@ -113,8 +129,9 @@ const DATA = {
     thresholds : [3, 4, 5]
   },
   [HISTOIRE] : {
+    uid: HISTOIRE,
     label : "Histoire",
-    scale: {
+    options : {
       1 : "Je connais trop bien la guerre de 78 !",
       2 : "Je connais à peu près les dates obligatoires. Faudrait pas m'en demander plus.",
       3 : "Je sais répéter quelques morceaux de mon cours d'histoire, si on me pose des questions précises.",
@@ -127,8 +144,9 @@ const DATA = {
     thresholds : [3, 5, 6]
   },
   [ANGLAIS] : {
+    uid: ANGLAIS,
     label : "Anglais",
-    scale : {
+    options : {
       1 : "Heu... quoi ?",
       2 : "Ich liebe dich ?",
       3 : "Mai telor is riche",

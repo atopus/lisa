@@ -4,7 +4,16 @@ import DATA from './data';
 const PREFIX = '@lisa';
 
 export const getData = key => DATA[key];
-export const getDimensions = () => Object.keys(DATA);
+
+export const getDimensions = () => Object.keys(DATA).map(k => {
+  const data = DATA[k]
+  const { uid, label, thresholds } = data
+  const options = Object.keys(data.options).map(index => ({
+      index : parseInt(index),
+      text : data.options[index]
+    }))
+  return { uid, label, options, thresholds }
+})
 
 export const getValues = async (id) => {
   try {

@@ -10,9 +10,9 @@ import {
 const mapStateToProps = (state, ownProps) => {
   const uid = ownProps.navigation.state.params.dimensionId
   const data = getData(uid)
-  const scale = Object.keys(data.scale).map(key => ({
+  const scale = Object.keys(data.options).map(key => ({
     key,
-    text : data.scale[key]
+    text : data.options[key]
   }))
   return {
     id: uid,

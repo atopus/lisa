@@ -1,3 +1,4 @@
+import { combineReducers } from 'redux'
 import {
   LOAD_DIMENSIONS_SUCCESS,
   ADD_DIMENSION_SUCCESS,
@@ -195,4 +196,38 @@ const dimensions = (state = [], action) => {
   }
 }
 
-export default dimensions
+export const getDimensions = state => state.dimensions
+
+export const getDimension = (state, uid) => {
+  if(!uid) throw new Error("Missing argument uid")
+  const dimensions = getDimensions(state)
+  return dimensions ? dimensions.find(d => d.uid === uid) : false
+}
+
+export const getValues = (state, uid) => {
+  const dimension = getDimension(state, uid)  
+  return dimension ? dimension.values : []
+}
+export const getValue = (state, uid, date) => {
+  const values = getValues(state, uid)
+  return values ? values[date] : false
+}
+
+export const getOptions = (state, uid) => {
+  const dimension = getDimension(state, uid)
+  return dimension ? dimension.options : []
+}
+
+export const getOption = (state, uid, index) => {
+  const options = getOptions(state, uid)
+  return options ? options.find(o => o.index === index) : false
+}
+
+export const getThresholds = (state, uid) => {
+  const dimension = getDimension(state, uid)
+  return dimension ? dimension.thresholds : []
+}
+
+export default combineReducers({
+  dimensions
+})

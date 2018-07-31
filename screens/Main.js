@@ -30,7 +30,7 @@ const mapStateToProps = state => ({
   storage : getStorageAvailability(state),
   internet : getNetworkAvailability(state),
   date : getDate(state),
-  dimensions: getDimensions(state).map(d => ({ key: d }))
+  dimensions: getDimensions(state).map(d => ({ ...d, key: d.uid }))
 });
 
 const mapDispatchToProps = {
@@ -156,7 +156,7 @@ class Main extends React.Component {
             renderItem={({item}) => {
               return (
                 <SliderComponent
-                  id={item.key}
+                  uid={item.uid}
                   date={this.props.date}
                   navigation={this.props.navigation}
               />) 
