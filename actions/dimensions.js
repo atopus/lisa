@@ -12,7 +12,8 @@ import {
   LOAD_VALUES_SUCCESS,
   LOAD_DIMENSIONS,
   LOAD_DIMENSIONS_SUCCESS,
-  LOAD_DIMENSIONS_FAILED
+  LOAD_DIMENSIONS_FAILED,
+  UPDATE_DIMENSION_OPTION
 } from '../constants/actions';
 
 export const loadDimensions = () => dispatch => {
@@ -69,3 +70,8 @@ export const loadValues = uid => dispatch => {
       type: LOAD_DIMENSIONS_FAILED
     }))
 };
+
+export const updateDimensionOption = (dimensionId, index, text) => ({
+  type: UPDATE_DIMENSION_OPTION,
+  payload: { dimensionId, index, text }
+})

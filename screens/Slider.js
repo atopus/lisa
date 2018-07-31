@@ -90,7 +90,9 @@ class SliderComponent extends React.Component {
 
     return (
       <TouchableHighlight 
-        onPress={() => Alert.alert("You tapped me !")}
+        onPress={() => this.props.navigation.navigate('Dimension', {
+          dimensionId: this.props.id
+        })}
         underlayColor='yellow'
       >
         <View style={[ styles.item, { borderLeftColor: color } ]}>

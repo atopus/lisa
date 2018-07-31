@@ -1,8 +1,5 @@
 import { combineReducers } from 'redux';
 import {
-  LOAD_DIMENSIONS_SUCCESS,
-  ADD_DIMENSION,
-  SET_VALUE_SUCCESS,
   LOAD_VALUES,
   LOAD_VALUES_SUCCESS,
   LOAD_VALUES_FAILED,
@@ -11,6 +8,7 @@ import {
   SET_DATE,
   APP_LOADING,
 } from '../constants/actions';
+import dimensions, * as fromDimensions from './dimensions'
 
 import moment from 'moment/min/moment-with-locales';
 moment.locale('fr');
@@ -72,44 +70,6 @@ const home = (state = { date : moment().format('YYYYMMDD') }, action) => {
   }
 }
 
-const dimensions = (state = {}, action) => {
-  
-  switch(action.type) {
-
-    case LOAD_DIMENSIONS_SUCCESS:
-      const dimensions = action.payload
-      const newState = {}
-      dimensions.forEach(dimension => newState[dimension] = {})
-      return newState
-  
-    case ADD_DIMENSION:
-      return {
-        ...state,
-        [action.payload] : {}
-      };
-
-    case SET_VALUE_SUCCESS:
-      const { date, value } = action.payload
-      return {
-        ...state,
-        [action.payload.uid] : {
-          ...state[action.payload.uid],
-          [date] : value
-        }
-      }
-
-    case LOAD_VALUES_SUCCESS:
-      const { values } = action.payload
-      return {
-        ...state,
-        [action.payload.uid] : values 
-      }
-
-    default:  
-      return state;
-  }
-}
-
 
 export default combineReducers({
   app,
@@ -118,15 +78,20 @@ export default combineReducers({
 })
 
 export const getValue = (state, uid, date) => 
-  state.dimensions[uid] && state.dimensions[uid][date] ? 
-    state.dimensions[uid][date] :
+  state.dimensions[uid] && 
+  state.dimensions[uid].values &&
+  state.dimensions[uid].values[date] ? 
+    state.dimensions[uid].values[date] :
     false
 
-export const getValues = (state, uid) => state.dimensions[uid]
-export const getDimensions = state => {
-  return Object.keys(state.dimensions)
-}
+export const getValues = (state, uid) => state.dimensions[uid].values
+export const getDimensions = state => Object.keys(state.dimensions)
+
 export const getDate = state => state.home.date
+export const getDimensionScale = (state, dimensionId) =>
+  state.dimensions[dimensionId] && 
+  state.dimensions[dimensionId].scale ?
+    state.dimensions[dimensionId].scale : {}
 
 export const getStorageAvailability = state => state.app.storage
 export const getNetworkAvailability = state => state.app.networking

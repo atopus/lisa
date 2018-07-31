@@ -5,6 +5,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import reducer from './reducers';
 import Main from './screens/Main';
+import Dimension from './screens/Dimension'
 
 import { createStackNavigator } from 'react-navigation';
 
@@ -18,9 +19,8 @@ const store = createStore(
 )
 
 const RootStack = createStackNavigator({
-  Home: {
-    screen: Main
-  },
+  Home: Main,
+  Dimension: Dimension
 })
 
 export default class App extends React.Component {

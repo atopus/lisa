@@ -158,6 +158,7 @@ class Main extends React.Component {
                 <SliderComponent
                   id={item.key}
                   date={this.props.date}
+                  navigation={this.props.navigation}
               />) 
             }}/>
         </ScrollView>

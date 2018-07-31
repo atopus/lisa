@@ -20,7 +20,7 @@ describe("When there is a value", async () => {
     console.log(res ? "it worked" : "it did NOT work");
   })
 
-  it('can record a new value', async () => {
+  xit('can record a new value', async () => {
     let result = await fromProvider.setValue('test', TODAY, 'TEST WRITE')
     expect(result).toBeTruthy();
 
@@ -28,7 +28,7 @@ describe("When there is a value", async () => {
     expect(values).toEqual('TEST')
   });
 
-  it('can record a new value', async () => {
+  xit('can record a new value', async () => {
 
     let values = await fromProvider.getValue('test', TODAY)
     expect(values).toEqual('TEST')
