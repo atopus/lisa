@@ -166,7 +166,6 @@ const dimensions = (state = [], action) => {
   
   switch(action.type) {
 
-    case LOAD_DIMENSIONS_SUCCESS:
     case SET_VALUE_SUCCESS:
     case LOAD_VALUES_SUCCESS:
     case REMOVE_VALUE_SUCCESS:
@@ -187,6 +186,9 @@ const dimensions = (state = [], action) => {
 
     case REMOVE_DIMENSION_SUCCESS:
       return state.filter(dimension => dimension.uid !== action.payload.uid)
+
+    case LOAD_DIMENSIONS_SUCCESS:
+      return action.payload
 
     default:
       return state;

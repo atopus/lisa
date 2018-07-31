@@ -55,6 +55,29 @@ describe("dimensions reducer", () => {
       expect(dimensions(state, action)).toEqual([updated])
     
     })
+
+    it('should handle LOAD_DIMENSIONS', () => {
+
+      const state = []
+      const d1 = {
+        uid: '1',
+        label: 'Dimension 1'
+      }
+      const d2 = {
+        uid: '2',
+        label: 'Dimension 2'
+      }
+      const d3 = {
+        uid: '3',
+        label: 'Dimension 3'
+      }
+      const action = {
+        type: actions.LOAD_DIMENSIONS_SUCCESS,
+        payload: [d1, d2, d3]
+      }
+
+      expect(dimensions(state, action)).toEqual([d1, d2, d3])
+    })
   })
 
   describe('handle dimension options', () => {
