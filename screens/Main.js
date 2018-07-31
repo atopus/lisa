@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Text, View, ScrollView, Button, FlatList, Alert } from 'react-native';
+import { Text, View, ScrollView, Button, FlatList, Alert, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 import SliderComponent from './Slider';
-import styles from '../Styles';
+import Styles from '../Styles';
 import {
   setDate
 } from '../actions/main.js';
@@ -114,7 +114,7 @@ class Main extends React.Component {
 
   renderHeaderDate() {
     return (
-      <View style={ styles.header }>
+      <View style={ Styles.header }>
         <View style={{ flex: 1, flexDirection: 'row' }}>
           <View>
             <FAIcon.Button size={12} backgroundColor='#ddd'
@@ -140,7 +140,7 @@ class Main extends React.Component {
 
   renderHeader() {
     return (
-      <View style={styles.header}>
+      <View style={Styles.header}>
         {this.renderControl()}
         {this.renderHeaderDate()}
       </View>
@@ -149,7 +149,7 @@ class Main extends React.Component {
 
   renderList() {
     return (
-      <View style={styles.list}>
+      <View style={Styles.list}>
         <ScrollView>
           <FlatList 
             data={this.props.dimensions}
@@ -169,12 +169,16 @@ class Main extends React.Component {
   render() {
 
     return (
-      <View style={styles.container}>
+      <View style={Styles.container}>
         {this.renderHeader()}
         {this.renderList()}
       </View>
     )}
 }
+
+const styles = StyleSheet.create({
+
+})
 
 export default connect(
   mapStateToProps,

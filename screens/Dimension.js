@@ -1,11 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Button, FlatList } from 'react-native'
+import { View, ScrollView, Text, Button, FlatList, StyleSheet } from 'react-native'
+import { Styles } from '../Styles'
 import { getData } from '../services/Provider'
 import DimensionOption from './DimensionOption'
-import {
-  getScale
-} from '../reducers'
 
 const mapStateToProps = (state, ownProps) => {
   const uid = ownProps.navigation.state.params.dimensionId
@@ -32,15 +30,16 @@ class Dimension extends React.Component {
 
   renderHeader() {
     return (
-      <View>
-        <Text style={{ fontSize: 40 }}>{this.props.label}</Text>
+      <View style={ styles.header }>
+        <Text style={ styles.h1 }>{this.props.label}</Text>
       </View>
     )
   }
 
   renderModList() {
     return (
-      <View>
+      <View style={ styles.list }>
+      <ScrollView style={{ paddingHorizontal:15 }}>
         <FlatList
           data={this.props.scale}
           renderItem={({item}) => {
@@ -51,19 +50,38 @@ class Dimension extends React.Component {
               navigation={this.props.navigation}
             />
           }} />
+      </ScrollView>
       </View>
     )
   }
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={ styles.container }>
         {this.renderHeader()}
         {this.renderModList()}
       </View>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white'
+  },
+  header : {
+    flex: 1,
+    alignItems : 'center', 
+    justifyContent : 'center'
+  },
+  list : {
+    flex: 5,
+  },
+  h1 : {
+    fontSize: 40
+  }
+})
 
 export default connect(
   mapStateToProps,

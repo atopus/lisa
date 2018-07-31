@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TextInput } from 'react-native'
+import { View, Text, TextInput, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import { updateDimensionOption } from '../actions/dimensions'
 
@@ -20,19 +20,15 @@ class DimensionOption extends React.Component {
 
   render() {
     return (
-      <View style={{ 
-        flex: 1, 
-        paddingHorizontal: 15,
-        flexDirection: 'row'
-      }}>
-        <View>
+      <View style={ styles.container }>
+        <View style={ styles.index }>
           <Text>{this.props.index}.</Text>
         </View>
-        <View>
+        <View style={ styles.text }>
         <TextInput 
           style={{ 
             backgroundColor:'white', 
-            borderColor: 'lightgrey',
+            borderColor: '#eee',
             borderWidth: 1,
             borderRadius: 5,
             paddingHorizontal: 5
@@ -47,6 +43,24 @@ class DimensionOption extends React.Component {
     )
   }
 }
+
+const left = 5;
+const right = 100 - left;
+
+const styles = StyleSheet.create({
+  container : {
+    flex: 1, 
+    flexDirection: 'row',
+    paddingVertical: 5
+  },
+  index : {
+    width: `${left}%`,
+    justifyContent: 'center'
+  },
+  text : {
+    width: `${right}%`
+  }
+})
 
 export default connect(
   mapStateToProps,
