@@ -21,7 +21,8 @@
     "test": "jest"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "jest-expo",
+    "setupTestFrameworkScriptFile": "./setupJest"
   },
   "dependencies": {
     "expo": "^27.0.1",
