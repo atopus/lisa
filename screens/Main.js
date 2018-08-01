@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 import SliderComponent from './Slider';
-import Styles from '../Styles';
+import Styles, * as StyleVariables from '../Styles';
 import {
   setDate
 } from '../actions/main.js';
@@ -45,7 +45,7 @@ class Main extends React.Component {
   static navigationOptions = {
     title: 'Home',
     headerStyle : {
-      backgroundColor: 'orange'
+      backgroundColor: StyleVariables.PRIMARY.neutral
     },
     headerTintColor : '#fff',
   };
@@ -101,12 +101,12 @@ class Main extends React.Component {
     return (
       <View style={{ flexDirection: 'row' }}>
         {this.props.internet ? 
-          <Ionicons name='ios-wifi' size={25} color='green' /> :
-          <Ionicons name='ios-wifi' size={25} color='orange' />
+          <Ionicons name='ios-wifi' size={25} color={StyleVariables.success} /> :
+          <Ionicons name='ios-wifi' size={25} color={StyleVariables.warning} />
         }
         {this.props.storage ? 
-          <Ionicons name='md-disc' size={25} color='green' /> :
-          <Ionicons name='md-disc' size={25} color='red' />
+          <Ionicons name='md-disc' size={25} color={StyleVariables.success} /> :
+          <Ionicons name='md-disc' size={25} color={StyleVariables.danger} />
         }
       </View>
     )
@@ -123,7 +123,7 @@ class Main extends React.Component {
             ></FAIcon.Button>
           </View>  
           <View style={{ paddingHorizontal: 20 }}>
-            <Text style={ styles.h1 }>
+            <Text style={ Styles.h1 }>
               {moment(this.props.date, 'YYYYMMDD').format('Do MMMM YYYY')}
             </Text>
           </View>
@@ -175,17 +175,6 @@ class Main extends React.Component {
     )}
 }
 
-const styles = StyleSheet.create({
-  container : {
-
-  },
-  header: {
-
-  },
-  h1 : {
-    fontSize: 40
-  }
-})
 
 export default connect(
   mapStateToProps,

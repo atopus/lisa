@@ -91,7 +91,7 @@ class SliderComponent extends React.Component {
     return (
       <TouchableHighlight 
         onPress={() => Alert.alert("You tapped me !")}
-        underlayColor={StyleVariables.info}
+        underlayColor={StyleVariables.COMPLEMENT2.lighter}
       >
         <View style={[ Styles.item, { borderLeftColor: color } ]}>
           <View style={{ flex: 1, paddingHorizontal : 10 }}>
