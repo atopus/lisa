@@ -163,7 +163,7 @@ const dimension = (state = {}, action) => {
   }
 }
 
-const dimensions = (state = [], action) => {
+export const dimensions = (state = [], action) => {
   
   switch(action.type) {
 

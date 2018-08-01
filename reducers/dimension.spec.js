@@ -1,4 +1,4 @@
-import dimensions from './dimensions'
+import reducer, * as fromReducer from './dimensions'
 import * as actions from '../constants/actions'
 
 describe("dimensions reducer", () => {
@@ -12,7 +12,7 @@ describe("dimensions reducer", () => {
 
     it('should handle initial state', () => {
 
-      expect(dimensions(undefined, {})).toEqual([])
+      expect(fromReducer.dimensions(undefined, {})).toEqual([])
     
     })
 
@@ -24,7 +24,7 @@ describe("dimensions reducer", () => {
         payload: dimension1 
       }
       
-      expect(dimensions(state, action)).toEqual([dimension1])
+      expect(fromReducer.dimensions(state, action)).toEqual([dimension1])
 
     })
 
@@ -36,7 +36,7 @@ describe("dimensions reducer", () => {
         payload: { uid : dimension1.uid }
       }
       
-      expect(dimensions(state, action)).toEqual([])
+      expect(fromReducer.dimensions(state, action)).toEqual([])
 
     })
 
@@ -52,7 +52,7 @@ describe("dimensions reducer", () => {
         payload : updated
       }
       
-      expect(dimensions(state, action)).toEqual([updated])
+      expect(fromReducer.dimensions(state, action)).toEqual([updated])
     
     })
 
@@ -76,7 +76,7 @@ describe("dimensions reducer", () => {
         payload: [d1, d2, d3]
       }
 
-      expect(dimensions(state, action)).toEqual([d1, d2, d3])
+      expect(fromReducer.dimensions(state, action)).toEqual([d1, d2, d3])
     })
   })
 
@@ -104,7 +104,7 @@ describe("dimensions reducer", () => {
           option : option1
         }
       }
-      expect(dimensions(state, action))
+      expect(fromReducer.dimensions(state, action))
         .toEqual([{ ...dimension, options: [option1] }])
     })
 
@@ -117,7 +117,7 @@ describe("dimensions reducer", () => {
           option : option2
         }
       }
-      expect(dimensions(state, action))
+      expect(fromReducer.dimensions(state, action))
         .toEqual([{...dimension, options: [option1, option2]}])
     })
 
@@ -134,7 +134,7 @@ describe("dimensions reducer", () => {
           option: updated
         }
       }
-      expect(dimensions(state, action))
+      expect(fromReducer.dimensions(state, action))
         .toEqual([{ ...dimension, options: [updated ]}])
     })
 
@@ -149,7 +149,7 @@ describe("dimensions reducer", () => {
           }
         }
       }
-      expect(dimensions(state, action))
+      expect(fromReducer.dimensions(state, action))
         .toEqual([{ ...dimension, options : [] }])
     })
   })
@@ -175,7 +175,7 @@ describe("dimensions reducer", () => {
       }
       const state = [dimension]
       
-      expect(dimensions(state, action))
+      expect(fromReducer.dimensions(state, action))
       .toEqual([{ ...dimension, values : { ...value1 } }])
     
     })
@@ -193,7 +193,7 @@ describe("dimensions reducer", () => {
         }
       }
       const state = [{ ...dimension, values : { ...value1 } }]
-      expect(dimensions(state, action))
+      expect(fromReducer.dimensions(state, action))
         .toEqual([{ ...dimension, values : {} }])
     })
 
@@ -210,7 +210,7 @@ describe("dimensions reducer", () => {
         }
       }
       const state = [dimension ]
-      expect(dimensions(state, action))
+      expect(fromReducer.dimensions(state, action))
         .toEqual([{ ...dimension, values }])
     })
     
