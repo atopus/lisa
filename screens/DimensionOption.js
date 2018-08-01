@@ -17,8 +17,9 @@ class DimensionOption extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      edit : false,
-      text: props.text
+      edit : props.new || false,
+      text: props.text,
+      new : false
     }
   }
 

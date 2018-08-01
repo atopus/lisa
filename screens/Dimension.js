@@ -8,14 +8,15 @@ import DimensionOption from './DimensionOption'
 const mapStateToProps = (state, ownProps) => {
   const uid = ownProps.navigation.state.params.dimensionId
   const data = getData(uid)
-  const scale = Object.keys(data.options).map(key => ({
+  const options = Object.keys(data.options).map(key => ({
     key,
     text : data.options[key]
   }))
   return {
     id: uid,
     label: data.label,
-    scale: scale
+    options,
+    new : false
   } 
 }
 
@@ -24,6 +25,13 @@ const mapDispatchToProps = {
 }
 
 class Dimension extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      new: false
+    }
+  }
   static navigationOptions = ({ navigation }) => ({
     title: 'Dimension'
   })
@@ -37,20 +45,35 @@ class Dimension extends React.Component {
   }
 
   renderModList() {
+
+    const newIndex = Math.max.apply(0, this.props.options.map(o => parseInt(o.index))) + 1
+
     return (
       <View style={ styles.list }>
-      <ScrollView style={{ paddingHorizontal:15 }}>
-        <FlatList
-          data={this.props.scale}
-          renderItem={({item}) => {
-            return <DimensionOption 
-              index={item.key}
-              text={item.text}
-              dimensionId={this.props.id}
+        <ScrollView style={{ paddingHorizontal:15 }}>
+          <FlatList
+            data={this.props.options}
+            renderItem={({item}) => {
+              return <DimensionOption 
+                index={item.key}
+                text={item.text}
+                dimensionId={this.props.id}
+                navigation={this.props.navigation}
+              />
+            }} />
+          {this.state.new ? (
+            <DimensionOption
+              new={true}
               navigation={this.props.navigation}
-            />
-          }} />
-      </ScrollView>
+              index={newIndex}
+            />) : (
+            <View style={{ alignItems : 'center', width: '50%'}}>
+              <Button 
+                title='+' 
+                onPress={() => this.setState({ new : true })} />
+            </View>
+          )}
+        </ScrollView> 
       </View>
     )
   }
