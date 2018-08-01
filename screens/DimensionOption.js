@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native'
+import { View, Text, TextInput, StyleSheet, Button, TouchableWithoutFeedback } from 'react-native'
 import { connect } from 'react-redux'
 import { updateDimensionOption } from '../actions/dimensions'
 
@@ -52,18 +52,15 @@ class DimensionOption extends React.Component {
       </View>
     ) : (
       <View style={{ flex:1, flexDirection: 'row', alignItems:'center' }} >
-        <View style={{ width: '80%'}}>
-        <Text>
-          {this.state.text}
-        </Text>
-        </View>
-        <View style={{ width: '20%' }}>
-          <Button 
-            style={{ width: 2 }}
-            onPress={() => this.setState({ edit : !this.state.edit })}
-            title='edit' 
-          />
-        </View>
+        <TouchableWithoutFeedback
+          onPress={() => this.setState({ edit : !this.state.edit })}
+        >
+          <View>
+            <Text>
+              {this.state.text}
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
       </View>
     )
 
