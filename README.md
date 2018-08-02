@@ -1,13 +1,13 @@
-# Lisa
+# Liska
 
-Lisa is a two-fold side-project :
+Liska is a two-fold side-project :
 
 1. In the foreground, it is designed to help a high school student monitor his mood and habits, and eventually get a solid basis of best learning practices.
 2. In the background, it is a basic playground (as simple as a todo app) intended to explore and get acquainted with the core features of a react native. It aims at being a state-of-the-art app, including full test & documentation.
 
 ## Features
 
-Lisa is a one-screen mobile app that records numeric variables on a day-to-day basis, along with a few generic dimensions : 
+Liska is a one-screen mobile app that records numeric variables on a day-to-day basis, along with a few generic dimensions : 
 
 * Get to work ;
 * Realisation ;
@@ -41,13 +41,13 @@ Simply git clone this repo, and run `yarn install`.
 Quality improvments :
 
 * Webpack integration ;
-* Tests ;
+* Tests coverage ;
 * Documentation ;
 
 Features :
 
 * Update & create new dimensions & modalities ;
-* Graphics in order to ;
+* Graphics ;
 * customable notification ;
 * online sync, with redux & redux-offline ;
 
