@@ -1,3 +1,4 @@
+import uuidv1 from 'uuid/v1'
 import { 
   getDimensions, 
   setValue, 
@@ -5,6 +6,8 @@ import {
 } from '../services/Provider';
 import {
   ADD_DIMENSION,
+  ADD_DIMENSION_SUCCESS,
+  UPDATE_DIMENSION_SUCCESS,
   SET_VALUE,
   SET_VALUE_SUCCESS,
   SET_VALUE_FAILED,
@@ -75,6 +78,22 @@ export const loadValues = uid => dispatch => {
       type: LOAD_DIMENSIONS_FAILED
     }))
 };
+
+export const createDimension = label => ({
+  type: ADD_DIMENSION_SUCCESS,
+  payload: {
+    uid : uuidv1(),
+    label
+  } 
+})
+
+export const updateDimension = (uid, label) => ({
+  type: UPDATE_DIMENSION_SUCCESS,
+  payload : {
+    uid,
+    label
+  }
+})
 
 export const createDimensionOption = (dimensionId, index, text) => ({
   type: ADD_DIMENSION_OPTION_SUCCESS,

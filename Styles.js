@@ -24,5 +24,12 @@ export default StyleSheet.create({
   },
   footer : {
     flex: 1
+  },
+  textInput : {
+    backgroundColor:'white', 
+    borderColor: '#eee',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 5
   }
 });

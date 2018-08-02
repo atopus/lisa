@@ -1,28 +1,39 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, ScrollView, Text, Button, FlatList, StyleSheet } from 'react-native'
-import { Styles } from '../Styles'
-import { getData } from '../services/Provider'
+import { View, ScrollView, Text, Button, FlatList, StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import Styles from '../Styles'
 import DimensionOption from './DimensionOption'
+import { TextInput } from 'react-native-gesture-handler';
+
+import {
+  getDimension
+} from '../reducers'
+import {
+  createDimension,
+  updateDimension
+} from '../actions/dimensions'
 
 const mapStateToProps = (state, ownProps) => {
   const uid = ownProps.navigation.state.params.dimensionId
-  const data = getData(uid)
-  const options = Object.keys(data.options).map(key => ({
+  const dimension = uid ? getDimension(state, uid) : null 
+  // const data = getData(uid)
+  const options = dimension ? Object.keys(dimension.options).map(key => ({
     key,
     index: parseInt(key),
-    text : data.options[key]
-  }))
+    text : dimension.options[key].text
+  })) : []
+
   return {
-    id: uid,
-    label: data.label,
+    uid,
+    label: dimension ? dimension.label : null,
     options,
     new : false
   } 
 }
 
 const mapDispatchToProps = {
-
+  createDimension,
+  updateDimension
 }
 
 class Dimension extends React.Component {
@@ -30,18 +41,53 @@ class Dimension extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      new: false
+      edit: props.navigation.state.params.new || false,
+      label: props.label,
+      new: props.navigation.state.params.new || false
     }
   }
   static navigationOptions = ({ navigation }) => ({
     title: 'Dimension'
   })
 
+
+  _onSubmit() {
+
+    this.state.new ?
+      this.props.createDimension(this.state.label) :
+      this.props.updateDimension(this.props.uid, this.state.label)
+
+    this.setState({ edit: false, new : false })
+  }
+
   renderHeader() {
-    return (
-      <View style={ styles.header }>
-        <Text style={ styles.h1 }>{this.props.label}</Text>
+    return this.state.edit ? (
+      <View style={{ flex:1, flexDirection: 'row', alignItems:'center' }} >
+        <View style={{ width: '80%' }}>
+          <TextInput 
+            style={ Styles.textInput }
+            onChangeText={label => this.setState({ label }) }
+          >
+            {this.state.label}
+          </TextInput>
+        </View>
+        <View style={{ width: '20%' }}>
+          <Button
+            title='ok'
+            style={{ width: 2 }}
+            onPress={() => this._onSubmit()}
+            disabled={!this.state.label || !this.state.label.trim()} 
+          />
+        </View>
       </View>
+    ) : (
+      <TouchableWithoutFeedback
+        onPress={() => this.setState({ edit: true })}
+      >
+        <View style={ styles.header }>
+          <Text style={ styles.h1 }>{this.state.label}</Text>
+        </View>
+      </TouchableWithoutFeedback>
     )
   }
 
@@ -58,14 +104,14 @@ class Dimension extends React.Component {
               return <DimensionOption 
                 index={item.key}
                 text={item.text}
-                dimensionId={this.props.id}
+                dimensionId={this.props.uid}
                 navigation={this.props.navigation}
               />
             }} />
           {this.state.new ? (
             <DimensionOption
               new={true}
-              dimensionId={this.props.id}
+              dimensionId={this.props.uid}
               navigation={this.props.navigation}
               index={newIndex}
             />) : (
@@ -75,7 +121,7 @@ class Dimension extends React.Component {
                 onPress={() => this.setState({ new : true })} />
             </View>
           )}
-        </ScrollView> 
+        </ScrollView>
       </View>
     )
   }
@@ -84,7 +130,7 @@ class Dimension extends React.Component {
     return (
       <View style={ styles.container }>
         {this.renderHeader()}
-        {this.renderModList()}
+        {!this.state.new && this.renderModList()}
       </View>
     )
   }

@@ -113,12 +113,17 @@ const dimension = (state = {}, action) => {
 
     case ADD_DIMENSION_SUCCESS:
       if(!uid || !label) throw new Error("Missing argument.")
-      return { uid, label }
+      return { 
+        uid, 
+        label, 
+        options : options(undefined, action), 
+        values : values(undefined, action)
+      }
     
     case UPDATE_DIMENSION_SUCCESS:
       if(!uid || !label) throw new Error("Missing argument.")
       if(uid !== state.uid) return state
-      return { uid, label }
+      return { ...state, label }
 
     case SET_VALUE_SUCCESS :
     case REMOVE_VALUE_SUCCESS:

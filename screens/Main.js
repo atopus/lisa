@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 import SliderComponent from './Slider';
+import Dimension from './Dimension'
 import Styles from '../Styles';
 import {
   setDate
@@ -41,6 +42,13 @@ const mapDispatchToProps = {
 };
 
 class Main extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      new: false
+    }
+  }
 
   static navigationOptions = {
     title: 'Home',
@@ -160,7 +168,14 @@ class Main extends React.Component {
                   date={this.props.date}
                   navigation={this.props.navigation}
               />) 
-            }}/>
+          }}/>
+          <View style={{ alignItems : 'center', width: '50%'}}>
+            <Button 
+              title='+' 
+              onPress={() => this.props.navigation.navigate('Dimension', {
+                new: true
+              })} />
+          </View>
         </ScrollView>
       </View>
     )
@@ -175,10 +190,6 @@ class Main extends React.Component {
       </View>
     )}
 }
-
-const styles = StyleSheet.create({
-
-})
 
 export default connect(
   mapStateToProps,

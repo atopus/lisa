@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Text, TextInput, StyleSheet, Button, TouchableWithoutFeedback } from 'react-native'
+import Styles from '../Styles'
 import { connect } from 'react-redux'
 import { 
   updateDimensionOption,
@@ -43,7 +44,7 @@ class DimensionOption extends React.Component {
         <View style={{ width: '80%'}}>
           <TextInput
             onChangeText={text => this.setState({ text })}
-            style={ styles.textInput }
+            style={ Styles.textInput }
             multiline={true}
             numberOfLines={4}
           >
@@ -108,13 +109,6 @@ const styles = StyleSheet.create({
   },
   text : {
     width: `${right}%`
-  },
-  textInput : {
-    backgroundColor:'white', 
-    borderColor: '#eee',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 5
   }
 })
 
