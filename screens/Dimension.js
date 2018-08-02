@@ -10,6 +10,7 @@ const mapStateToProps = (state, ownProps) => {
   const data = getData(uid)
   const options = Object.keys(data.options).map(key => ({
     key,
+    index: parseInt(key),
     text : data.options[key]
   }))
   return {
@@ -64,6 +65,7 @@ class Dimension extends React.Component {
           {this.state.new ? (
             <DimensionOption
               new={true}
+              dimensionId={this.props.id}
               navigation={this.props.navigation}
               index={newIndex}
             />) : (

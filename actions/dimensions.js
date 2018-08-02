@@ -13,7 +13,9 @@ import {
   LOAD_DIMENSIONS,
   LOAD_DIMENSIONS_SUCCESS,
   LOAD_DIMENSIONS_FAILED,
-  UPDATE_DIMENSION_OPTION_SUCCESS
+  ADD_DIMENSION_OPTION_SUCCESS,
+  UPDATE_DIMENSION_OPTION_SUCCESS,
+  REMOVE_DIMENSION_OPTION_SUCCESS
 } from '../constants/actions';
 
 export const loadDimensions = () => dispatch => {
@@ -74,10 +76,28 @@ export const loadValues = uid => dispatch => {
     }))
 };
 
+export const createDimensionOption = (dimensionId, index, text) => ({
+  type: ADD_DIMENSION_OPTION_SUCCESS,
+  payload: { 
+    uid : dimensionId, 
+    option : { index, text }
+  }
+})
+
 export const updateDimensionOption = (dimensionId, index, text) => ({
   type: UPDATE_DIMENSION_OPTION_SUCCESS,
   payload: { 
     uid : dimensionId, 
     option : { index, text }
+  }
+})
+
+export const deleteDimensionOption = (dimensionId, index) => ({
+  type: REMOVE_DIMENSION_OPTION_SUCCESS,
+  payload: {
+    uid: dimensionId,
+    option : {
+      index
+    }
   }
 })

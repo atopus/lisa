@@ -1,7 +1,10 @@
 import React from 'react'
 import { View, Text, TextInput, StyleSheet, Button, TouchableWithoutFeedback } from 'react-native'
 import { connect } from 'react-redux'
-import { updateDimensionOption } from '../actions/dimensions'
+import { 
+  updateDimensionOption,
+  createDimensionOption
+} from '../actions/dimensions'
 
 const mapStateToProps = (state, props) => ({
   dimensionId: props.dimensionId,
@@ -9,7 +12,8 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = ({
-  updateDimensionOption : updateDimensionOption
+  updateDimensionOption,
+  createDimensionOption
 });
 
 class DimensionOption extends React.Component {
@@ -19,14 +23,17 @@ class DimensionOption extends React.Component {
     this.state = {
       edit : props.new || false,
       text: props.text,
-      new : false
+      new : props.new || false
     }
   }
 
   _onSubmit() {
 
-    this.props.updateDimensionOption(this.props.dimensionId, parseInt(this.props.index), this.state.text)
-    this.setState({ edit: false })
+    this.state.new ?
+      this.props.createDimensionOption(this.props.dimensionId, parseInt(this.props.index), this.state.text) :
+      this.props.updateDimensionOption(this.props.dimensionId, parseInt(this.props.index), this.state.text)
+    
+      this.setState({ edit: false })
   }
 
   _renderText() {
@@ -47,6 +54,7 @@ class DimensionOption extends React.Component {
           <Button 
             style={{ width: 2 }}
             onPress={() => this._onSubmit()}
+            disabled={!this.state.text || !this.state.text.trim()}
             title='ok' 
           />
         </View>
