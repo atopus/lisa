@@ -2,7 +2,7 @@
   "expo": {
     "sdkVersion": "27.0.0",
     "splash" : {
-      "image" : "./assets/splashraw.png",
+      "image" : "./assets/liska.png",
       "resizeMode" : "contain"
     }
   }
