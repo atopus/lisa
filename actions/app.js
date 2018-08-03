@@ -1,12 +1,8 @@
-import moment from 'moment';
 import {
   APP_LOADING,
   SET_NETWORKING,
   SET_STORAGE_AVAILABLE
 } from '../constants/actions';
-import {
-  setValue
-} from '../services/Provider';
 
 export const appLoading = loading => ({
   type: APP_LOADING,
@@ -24,15 +20,7 @@ export const checkNetworkAvaibility = () => dispatch =>
         payload: false
     }))
 
-export const checkStorageAvailability = () => dispatch =>
-  setValue("storageTest", moment().format('YYYYMMDD'), true)
-    .then(result => dispatch({
-      type: SET_STORAGE_AVAILABLE,
-      payload: result
-    }))
-    .catch(error => dispatch({
-      type: SET_STORAGE_AVAILABLE,
-      payload: false
-      })
-    );
-
+export const checkStorageAvailability = () => ({   
+    type: SET_STORAGE_AVAILABLE,
+    payload: true
+  })

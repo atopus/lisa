@@ -1,24 +1,19 @@
 import uuidv1 from 'uuid/v1'
 import { 
-  getDimensions, 
-  setValue, 
-  getValues 
+  getDimensions,
 } from '../services/Provider';
 import {
   ADD_DIMENSION,
   ADD_DIMENSION_SUCCESS,
   UPDATE_DIMENSION_SUCCESS,
-  SET_VALUE,
   SET_VALUE_SUCCESS,
-  SET_VALUE_FAILED,
-  LOAD_VALUES,
-  LOAD_VALUES_SUCCESS,
   LOAD_DIMENSIONS,
   LOAD_DIMENSIONS_SUCCESS,
   LOAD_DIMENSIONS_FAILED,
   ADD_DIMENSION_OPTION_SUCCESS,
   UPDATE_DIMENSION_OPTION_SUCCESS,
-  REMOVE_DIMENSION_OPTION_SUCCESS
+  REMOVE_DIMENSION_OPTION_SUCCESS,
+  EDIT_DIMENSION_OPTION
 } from '../constants/actions';
 
 export const loadDimensions = () => dispatch => {
@@ -36,34 +31,24 @@ export const loadDimension = uid => ({
   payload: uid
 });
 
-export const saveValue = (uid, date, value) => dispatch => {
-  dispatch({ type: SET_VALUE });
+export const editOption = (uid, index, edit) => ({
+  type: EDIT_DIMENSION_OPTION,
+  payload : {
+    uid,
+    option : {
+      index,
+      edit
+    }
+  }
+})
 
-  return setValue(uid, date, value)
-    .then(result => {
-      if(result) {
-        dispatch({
-          type: SET_VALUE_SUCCESS,
-          payload: { 
-            uid, 
-            value: { [date] : value }
-          }
-        })
-        return true
-      } else {
-        dispatch({
-          type: SET_VALUE_FAILED
-        })
-        return false
-      }
-    })
-    .catch(error => {
-      dispatch({
-        type: SET_VALUE_FAILED,
-        payload: error
-      })
-    })
-};
+export const saveValue = (uid, date, value) => ({
+  type: SET_VALUE_SUCCESS,
+  payload: { 
+    uid, 
+    value: { [date] : value }
+  }
+});
 
 export const loadValues = uid => dispatch => {
 
@@ -79,13 +64,20 @@ export const loadValues = uid => dispatch => {
     }))
 };
 
-export const createDimension = label => ({
-  type: ADD_DIMENSION_SUCCESS,
-  payload: {
-    uid : uuidv1(),
-    label
-  } 
-})
+export const createDimension = label => dispatch => {
+
+  const uid = uuidv1()
+  
+  dispatch({
+    type: ADD_DIMENSION_SUCCESS,
+    payload: {
+      uid,
+      label
+    }
+  })
+
+  return uid
+}
 
 export const updateDimension = (uid, label) => ({
   type: UPDATE_DIMENSION_SUCCESS,
@@ -120,3 +112,4 @@ export const deleteDimensionOption = (dimensionId, index) => ({
     }
   }
 })
+

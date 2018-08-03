@@ -24,7 +24,7 @@ describe("dimensions reducer", () => {
         payload: dimension1 
       }
       
-      expect(fromReducer.dimensions(state, action)).toEqual([dimension1])
+      expect(fromReducer.dimensions(state, action)).toMatchObject([dimension1])
 
     })
 
@@ -105,7 +105,7 @@ describe("dimensions reducer", () => {
         }
       }
       expect(fromReducer.dimensions(state, action))
-        .toEqual([{ ...dimension, options: [option1] }])
+        .toMatchObject([{ ...dimension, options: [option1] }])
     })
 
     it('should handle ADD_DIMENSION_OPTION for a second option', () => {
@@ -118,7 +118,7 @@ describe("dimensions reducer", () => {
         }
       }
       expect(fromReducer.dimensions(state, action))
-        .toEqual([{...dimension, options: [option1, option2]}])
+        .toMatchObject([{...dimension, options: [option1, option2]}])
     })
 
     it('should handle UPDATE_DIMENSION_OPTION', () => {
@@ -151,6 +151,23 @@ describe("dimensions reducer", () => {
       }
       expect(fromReducer.dimensions(state, action))
         .toEqual([{ ...dimension, options : [] }])
+    })
+
+    it('should handle EDIT_DIMENSION_OPTION', () => {
+      const state = [{ ...dimension, options : [option1, option2]}]
+      const action = {
+        type: actions.EDIT_DIMENSION_OPTION,
+        payload: {
+          uid: '1',
+          option :{
+            index: 2,
+            edit : true
+          }
+        }
+      }
+      const option2edited = { ...option2, edit: true }
+      expect(fromReducer.dimensions(state, action))
+        .toEqual([{ ...dimension, options : [option1, option2edited ]}])
     })
   })
 

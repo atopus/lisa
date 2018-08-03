@@ -12,7 +12,8 @@ import {
   UPDATE_DIMENSION_SUCCESS,
   SORT_DIMENSION_OPTION,
   REMOVE_VALUE_SUCCESS,
-  LOAD_VALUES_SUCCESS
+  LOAD_VALUES_SUCCESS,
+  EDIT_DIMENSION_OPTION
 } from '../constants/actions';
 
 const option = (state={}, action) => {
@@ -26,7 +27,12 @@ const option = (state={}, action) => {
       return { ...state, text }     
 
     case ADD_DIMENSION_OPTION_SUCCESS:
-      return { text, index }
+      return { text, index, edit : false }
+
+    case EDIT_DIMENSION_OPTION:
+      if(state.index !== index) return state
+      const { edit } = action.payload
+      return { ...state, edit }
 
     default:
       return state
@@ -42,6 +48,7 @@ const options = (state = [], action) => {
         option(undefined, action)
       ]
     case UPDATE_DIMENSION_OPTION_SUCCESS:
+    case EDIT_DIMENSION_OPTION:
       return state.map(o => option(o, action))
 
     case REMOVE_DIMENSION_OPTION_SUCCESS:
@@ -152,6 +159,7 @@ const dimension = (state = {}, action) => {
     case ADD_DIMENSION_OPTION_SUCCESS:
     case REMOVE_DIMENSION_OPTION_SUCCESS:
     case UPDATE_DIMENSION_OPTION_SUCCESS:
+    case EDIT_DIMENSION_OPTION:
       if(state.uid !== action.payload.uid) return state
       const optionAction = {
         type: action.type,
@@ -177,6 +185,7 @@ export const dimensions = (state = [], action) => {
     case ADD_DIMENSION_OPTION_SUCCESS:
     case UPDATE_DIMENSION_OPTION_SUCCESS:
     case REMOVE_DIMENSION_OPTION_SUCCESS:
+    case EDIT_DIMENSION_OPTION:
     case UPDATE_DIMENSION_SUCCESS:
     case SORT_DIMENSION_OPTION:
       return state.map(d =>  

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Text, View, Slider, Alert, TouchableHighlight } from 'react-native';
-import styles from '../Styles';
+import { Text, View, Slider, TouchableHighlight, StyleSheet, Alert } from 'react-native';
+import Styles, * as StyleVariables from '../Styles';
 
 import {
   getDate,
@@ -9,8 +9,7 @@ import {
   getDimension
 } from '../reducers';
 import {
-  saveValue,
-  loadValues
+  saveValue
 } from '../actions/dimensions';
 
 import moment from 'moment/min/moment-with-locales';
@@ -25,45 +24,25 @@ const mapStateToProps = (state, props) => {
 };
 
 const mapDispatchToProps = {
-  setValue: saveValue,
-  loadValues: loadValues
+  setValue: saveValue
 }
 
 class SliderComponent extends React.Component {
 
-  componentDidMount() {
-    if(!this.props.value) {
-      this.props.loadValues(this.props.dimension.uid);
-    }
-  }
-
   onValueChange(value) {
-
-    const alert = (error) => {
-      Alert.alert(
-        'Oups !',
-        "Une erreur s'est produite lors de l'enregistrement"+error && ' : '+error,
-        [{text: 'OK', onPress: () => console.log('OK Pressed')}],
-        { cancelable: false }
-      );
-    };
-    
     return this.props.setValue(this.props.dimension.uid, this.props.date, value)
-      .then(result => {
-        !result && alert();
-      })
-      .catch(error => alert(error) );
   }
 
   _getColor(value, thresholds) {
 
-    if(!value) return 'lightgrey';
+    if(value === false || value === undefined || value === null) 
+      return 'lightgrey';
 
     const COLORS = [
-      '#A10800', // red.
-      'orange',  // orange
-      '#FFE700', // yellow
-      '#D5F800'  // light green
+      StyleVariables.danger, // red.
+      StyleVariables.warning,  // orange
+      StyleVariables.info, // yellow
+      StyleVariables.success  // light green
     ]
 
     const thr = thresholds || [3, 4, 7];
@@ -74,16 +53,19 @@ class SliderComponent extends React.Component {
   }
 
   _getOptionLabel(value, options) {
-    if(value) {
+    if(value !== false && value !== undefined && value !== null) {
       
       const option = options.find(option => option.index === value)
       
       if(!option) {
-        throw new Error(`Unable to find option for dimension ${this.props.dimension.uid} and value ${value}`)
+        Alert.alert(
+          "Internal Error", 
+          `Sorry, could not find value ${value} for dimension ${this.props.dimension.uid}. Therefore it has been skipped. I may be due to a corrupted data. Please notify the author of this app if this problem persits.`, 
+          [{ 'text' : 'Ok' }]
+        )
+      } else {
+        return option.text
       }
-      
-      return option.text
-
     } else return '--'
   }
 
@@ -102,9 +84,9 @@ class SliderComponent extends React.Component {
         onPress={() => this.props.navigation.navigate('Dimension', {
           dimensionId: this.props.dimension.uid
         })}
-        underlayColor='yellow'
+        underlayColor={StyleVariables.COMPLEMENT2.lighter}
       >
-        <View style={[ styles.item, { borderLeftColor: color } ]}>
+        <View style={[ Styles.item, { borderLeftColor: color } ]}>
           <View style={{ flex: 1, paddingHorizontal : 10 }}>
             <Text style={{ flex: 1, fontSize: 24 }}>{this.props.dimension.label} :</Text>
           </View>
@@ -132,6 +114,16 @@ class SliderComponent extends React.Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container : {
+
+  },
+  slider : {
+    flex: 1,
+    width: '100%'
+  }
+})
 
 export default connect(
   mapStateToProps,

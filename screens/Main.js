@@ -1,12 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Text, View, ScrollView, Button, FlatList, Alert, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Text, View, ScrollView, FlatList, Button } from 'react-native';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 import SliderComponent from './Slider';
-import Dimension from './Dimension'
-import Styles from '../Styles';
+import Styles, * as StyleVariables from '../Styles';
 import {
   setDate
 } from '../actions/main.js';
@@ -20,23 +18,24 @@ import {
   checkNetworkAvaibility,
   checkStorageAvailability
 } from '../actions/app';
-import {
-  loadDimensions
-} from '../actions/dimensions';
 
 import moment from 'moment/min/moment-with-locales';
 moment.locale('fr');
 
-const mapStateToProps = state => ({
-  storage : getStorageAvailability(state),
-  internet : getNetworkAvailability(state),
-  date : getDate(state),
-  dimensions: getDimensions(state).map(d => ({ ...d, key: d.uid }))
-});
+const mapStateToProps = state => {
+  let dimensions = getDimensions(state)
+  dimensions = dimensions && dimensions.length > 0 ?
+    dimensions.map(d => ({ ...d, key: d.uid })) : []
+  return {
+    storage : getStorageAvailability(state),
+    internet : getNetworkAvailability(state),
+    date : getDate(state),
+    dimensions
+  }
+}
 
 const mapDispatchToProps = {
   setDate : setDate,
-  loadDimensions: loadDimensions,
   checkNetworkAvaibility : checkNetworkAvaibility,
   checkStorageAvailability : checkStorageAvailability
 };
@@ -53,43 +52,11 @@ class Main extends React.Component {
   static navigationOptions = {
     title: 'Home',
     headerStyle : {
-      backgroundColor: 'orange'
+      backgroundColor: StyleVariables.PRIMARY.neutral
     },
     headerTintColor : '#fff',
   };
 
-  componentDidMount() {
-    // Internet & localStorage availability is checked on mount because Android
-    // v7 against which it is regularly tested often bugs aften a couple of 
-    // expo reloadings.
-    this.props.loadDimensions();
-    this.props.checkNetworkAvaibility();
-    this.props.checkStorageAvailability();
-  }
-
-  clearData() {
-
-    const alert = (error) => {
-      Alert.alert(
-        'Oups !',
-        "Une erreur s'est produite lors de l'enregistrement"+error && ' : '+error,
-        [{text: 'OK', onPress: () => console.log('OK Pressed')}],
-        { cancelable: false }
-      );
-    };
-    
-    return clearAll()
-      .then(result => result ?
-          Alert.alert(
-            'Ok !',
-            "Les données ont bien été effacées",
-            [{text: 'OK', onPress: () => console.log('OK Pressed')}],
-            { cancelable: false }
-          ) : 
-          alert()
-        )
-      .catch(error => alert(error));
-  }
 
   resetDate() {
     this.setState({ date : moment().format('YYYYMMDD') });
@@ -105,24 +72,9 @@ class Main extends React.Component {
     this.props.setDate(newDate.format('YYYYMMDD'));
   }
 
-  renderControl() {
-    return (
-      <View style={{ flexDirection: 'row' }}>
-        {this.props.internet ? 
-          <Ionicons name='ios-wifi' size={25} color='green' /> :
-          <Ionicons name='ios-wifi' size={25} color='orange' />
-        }
-        {this.props.storage ? 
-          <Ionicons name='md-disc' size={25} color='green' /> :
-          <Ionicons name='md-disc' size={25} color='red' />
-        }
-      </View>
-    )
-  }
-
   renderHeaderDate() {
     return (
-      <View style={ Styles.header }>
+      <View style={ [ Styles.header, { paddingTop: 15  } ] }>
         <View style={{ flex: 1, flexDirection: 'row' }}>
           <View>
             <FAIcon.Button size={12} backgroundColor='#ddd'
@@ -131,7 +83,7 @@ class Main extends React.Component {
             ></FAIcon.Button>
           </View>  
           <View style={{ paddingHorizontal: 20 }}>
-            <Text style={{ fontSize: 40 }}>
+            <Text style={ Styles.h1 }>
               {moment(this.props.date, 'YYYYMMDD').format('Do MMMM YYYY')}
             </Text>
           </View>
@@ -149,7 +101,6 @@ class Main extends React.Component {
   renderHeader() {
     return (
       <View style={Styles.header}>
-        {this.renderControl()}
         {this.renderHeaderDate()}
       </View>
     )
@@ -190,6 +141,7 @@ class Main extends React.Component {
       </View>
     )}
 }
+
 
 export default connect(
   mapStateToProps,

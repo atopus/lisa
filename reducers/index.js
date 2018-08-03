@@ -91,9 +91,11 @@ export const getValue = (state, uid, date) =>
 export const getOptions = (state, uid) => 
   fromDimensions.getOptions(state.dimensions, uid)
 
+export const getOption = (state, uid, index) =>
+  fromDimensions.getOption(state.dimensions, uid, index)
+
 export const getThresholds = (state, uid) =>
   fromDimensions.getThresholds(state.dimensions, uid)
-
 
 export const getDate = state => state.home.date
 export const getDimensionScale = (state, dimensionId) =>

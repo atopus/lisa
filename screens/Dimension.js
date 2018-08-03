@@ -54,9 +54,12 @@ class Dimension extends React.Component {
 
   _onSubmit() {
 
-    this.state.isNew ?
-      this.props.createDimension(this.state.label) :
+    if(this.state.isNew) {
+      const uid = this.props.createDimension(this.state.label)
+      this.props.navigation.navigate('Dimension', { dimensionId: uid })
+    } else {
       this.props.updateDimension(this.props.uid, this.state.label)
+    }
 
     this.setState({ edit: false, isNew : false })
   }
@@ -96,7 +99,7 @@ class Dimension extends React.Component {
 
     const newIndex = this.props.options.length > 0 ?
       Math.max.apply(1, this.props.options.map(o => parseInt(o.index))) + 1 :
-      1
+      0
 
     return (
       <View style={ styles.list }>
@@ -105,7 +108,7 @@ class Dimension extends React.Component {
             data={this.props.options}
             renderItem={({item}) => {
               return <DimensionOption 
-                index={item.key}
+                index={item.index}
                 text={item.text}
                 dimensionId={this.props.uid}
                 navigation={this.props.navigation}

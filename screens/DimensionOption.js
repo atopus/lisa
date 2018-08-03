@@ -4,17 +4,22 @@ import Styles from '../Styles'
 import { connect } from 'react-redux'
 import { 
   updateDimensionOption,
-  createDimensionOption
+  createDimensionOption,
+  editOption
 } from '../actions/dimensions'
+import {
+  getOption
+} from '../reducers'
 
 const mapStateToProps = (state, props) => ({
   dimensionId: props.dimensionId,
-  index: props.index
+  option: getOption(state, props.dimensionId, props.index)
 });
 
 const mapDispatchToProps = ({
   updateDimensionOption,
-  createDimensionOption
+  createDimensionOption,
+  editOption
 });
 
 class DimensionOption extends React.Component {
@@ -23,23 +28,34 @@ class DimensionOption extends React.Component {
     super(props)
     this.state = {
       edit : props.new || false,
-      text: props.text,
-      new : props.new || false
+      text: props.option ? props.option.text : '',
+      new : props.new || false,
+      index: props.index
     }
   }
 
   _onSubmit() {
 
-    this.state.new ?
-      this.props.createDimensionOption(this.props.dimensionId, parseInt(this.props.index), this.state.text) :
-      this.props.updateDimensionOption(this.props.dimensionId, parseInt(this.props.index), this.state.text)
-    
-      this.setState({ edit: false })
+    if(this.state.new) {
+      this.props.createDimensionOption(
+        this.props.dimensionId, 
+        parseInt(this.props.index), 
+        this.state.text
+      )
+      this.setState({ edit: false, text: '' })
+    } else {
+      this.props.updateDimensionOption(
+        this.props.dimensionId, 
+        parseInt(this.props.index), 
+        this.state.text
+      )
+      this.props.editOption(this.props.dimensionId, this.props.index, false)
+    }
   }
 
   _renderText() {
 
-    const text = this.state.edit ? (
+    const text = !this.props.option || this.props.option.edit ? (
       <View style={{ flex:1, flexDirection: 'row', alignItems:'center' }} >
         <View style={{ width: '80%'}}>
           <TextInput
@@ -63,7 +79,7 @@ class DimensionOption extends React.Component {
     ) : (
       <View style={{ flex:1, flexDirection: 'row', alignItems:'center' }} >
         <TouchableWithoutFeedback
-          onPress={() => this.setState({ edit : !this.state.edit })}
+          onPress={() => this.props.editOption(this.props.dimensionId, this.props.index, true)}
         >
           <View>
             <Text>
@@ -84,9 +100,11 @@ class DimensionOption extends React.Component {
   render() {
     return (
       <View style={ styles.container }>
-        <View style={ styles.index }>
-          <Text>{this.props.index}.</Text>
-        </View>
+        {this.props.option && (
+          <View style={ styles.index }>
+            <Text>{this.props.index}.</Text>
+          </View>
+        )}
         {this._renderText()}
       </View>
     )
