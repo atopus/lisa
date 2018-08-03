@@ -9,7 +9,6 @@ describe("When there is no value", () => {
     fromProvider.getValues('xxxx').then(value => 
       expect(value).toEqual(undefined)
     )
-    
   });
 })
 

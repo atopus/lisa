@@ -14,7 +14,7 @@ import Main from './screens/Main'
 const middleware = applyMiddleware(thunk);
 
 const persistConfig = {
-  key: 'root',
+  key: 'liska',
   storage,
 }
 

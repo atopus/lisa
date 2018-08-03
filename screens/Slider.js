@@ -9,8 +9,7 @@ import {
   getValue
 } from '../reducers';
 import {
-  saveValue,
-  loadValues
+  saveValue
 } from '../actions/dimensions';
 
 import moment from 'moment/min/moment-with-locales';
@@ -23,34 +22,13 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = {
-  setValue: saveValue,
-  loadValues: loadValues
+  setValue: saveValue
 }
 
 class SliderComponent extends React.Component {
 
-  componentDidMount() {
-    if(!this.props.value) {
-      this.props.loadValues(this.props.id);
-    }
-  }
-
   onValueChange(value) {
-
-    const alert = (error) => {
-      Alert.alert(
-        'Oups !',
-        "Une erreur s'est produite lors de l'enregistrement"+error && ' : '+error,
-        [{text: 'OK', onPress: () => console.log('OK Pressed')}],
-        { cancelable: false }
-      );
-    };
-    
     return this.props.setValue(this.props.id, this.props.date, value)
-      .then(result => {
-        !result && alert();
-      })
-      .catch(error => alert(error) );
   }
 
   getColor(value, thresholds) {

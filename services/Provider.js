@@ -6,71 +6,74 @@ const PREFIX = '@lisa';
 export const getData = key => DATA[key];
 export const getDimensions = () => Object.keys(DATA);
 
-export const getValues = async (id) => {
-  try {
+// export const getValues = async (id) => {
+//   // try {
 
-    if(typeof id !== 'string') throw new Error("id must be a string. Received "+id);
+//   //   // if(typeof id !== 'string') throw new Error("id must be a string. Received "+id);
 
-    const rawValues = await AsyncStorage.getItem(`${PREFIX}-${id}`);
-    const values = JSON.parse(rawValues);
-    if(values !== null) return values;
-    else return false;
+//   //   // const rawValues = await AsyncStorage.getItem(`${PREFIX}-${id}`);
+//   //   // const values = JSON.parse(rawValues);
+//   //   // if(values !== null) return values;
+//   //   // else 
+//   //   return false;
+//     return true
+//   // } catch(error) {
+//   //   console.error(error)
+//   //   return false
+//   // }
+// }
+
+// /**
+//  * 
+//  * @param {string} id 
+//  * @param {string} date YYYYMMDD 
+//  */
+// export const getValue = async (id, date) => {
+
+//   // try {
+
+//     // if(typeof id !== 'string') throw new Error("id must be a string. Received "+id);
+//     // if(typeof date !== 'string' || date.length !== 8 || isNaN(date)) throw new Error("Bad date argument. Must be a string number formated as 'YYYYMMDD'. Received "+date);
     
-  } catch(error) {
-    console.error(error)
-    return false
-  }
-}
+//     // const rawValues = await AsyncStorage.getItem(`${PREFIX}-${id}`);
+//     // const values = JSON.parse(rawValues);
+//     // if(values !== null && values[date] !== undefined) {
+//     //   return values[date];
+//     // } else {
+//       // return false;
+//     // }
+//   // } catch(error) {
+//   //   throw error
+//   // }
+//   return true
+// }
 
 /**
- * 
- * @param {string} id 
- * @param {string} date YYYYMMDD 
- */
-export const getValue = async (id, date) => {
+//  * Create or replace a value.
+//  * 
+//  * @param {string} id 
+//  * @param {string} date 
+//  * @param {any} value 
+//  */
+// export const setValue = async (id, date, value) => {
 
-  try {
+//   // if(typeof id !== 'string') throw new Error("id must be a string. Received "+id);
+//   // if(typeof date !== 'string' || date.length !== 8 || isNaN(date)) throw new Error("Bad date argument. Must be a string number formated as 'YYYYMMDD'. Received "+date);
+//   // if(value === null || value === undefined) throw new Error("Missing value argument. Cannot be null nor undefined.")
 
-    if(typeof id !== 'string') throw new Error("id must be a string. Received "+id);
-    if(typeof date !== 'string' || date.length !== 8 || isNaN(date)) throw new Error("Bad date argument. Must be a string number formated as 'YYYYMMDD'. Received "+date);
-    
-    const rawValues = await AsyncStorage.getItem(`${PREFIX}-${id}`);
-    const values = JSON.parse(rawValues);
-    if(values !== null && values[date] !== undefined) {
-      return values[date];
-    } else {
-      return false;
-    }
-  } catch(error) {
-    throw error
-  }
-};
-
-/**
- * Create or replace a value.
- * 
- * @param {string} id 
- * @param {string} date 
- * @param {any} value 
- */
-export const setValue = async (id, date, value) => {
-
-  if(typeof id !== 'string') throw new Error("id must be a string. Received "+id);
-  if(typeof date !== 'string' || date.length !== 8 || isNaN(date)) throw new Error("Bad date argument. Must be a string number formated as 'YYYYMMDD'. Received "+date);
-  if(value === null || value === undefined) throw new Error("Missing value argument. Cannot be null nor undefined.")
-
-  try {
-    let oldValues = await getValues(id, date) || {} ;
-    // Temp HACK : remove old Storage.
-    if(typeof oldValues !== 'object') oldValues = {};
-    const newValue = { ...oldValues, [date] : value }; 
-    await AsyncStorage.setItem(`${PREFIX}-${id}`, JSON.stringify(newValue));
-    return true;
-  } catch(error) {
-    console.error(error)
-    return false;
-  }
-};
+//   // try {
+//   // //   let oldValues = await getValues(id, date) || {} ;
+//   // //   // Temp HACK : remove old Storage.
+//   // //   if(typeof oldValues !== 'object') oldValues = {};
+//   // //   const newValue = { ...oldValues, [date] : value }; 
+//   // //   await AsyncStorage.setItem(`${PREFIX}-${id}`, JSON.stringify(newValue));
+//   //   return true;
+//   // } catch(error) {
+//   //   console.error(error)
+//   //   return false;
+//   // }
+//   return true
+// };
 
 export const valueExists = async (id, date) => getValues(id, date) !== false;
 
