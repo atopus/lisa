@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Text, View, ScrollView, Button, FlatList, Alert } from 'react-native';
+import { Text, View, ScrollView, Button, FlatList, Alert, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 import SliderComponent from './Slider';
-import styles from '../Styles';
+import Styles, * as StyleVariables from '../Styles';
 import {
   setDate
 } from '../actions/main.js';
@@ -19,9 +19,6 @@ import {
   checkNetworkAvaibility,
   checkStorageAvailability
 } from '../actions/app';
-import {
-  loadDimensions
-} from '../actions/dimensions';
 
 import moment from 'moment/min/moment-with-locales';
 moment.locale('fr');
@@ -35,7 +32,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   setDate : setDate,
-  loadDimensions: loadDimensions,
   checkNetworkAvaibility : checkNetworkAvaibility,
   checkStorageAvailability : checkStorageAvailability
 };
@@ -45,7 +41,7 @@ class Main extends React.Component {
   static navigationOptions = {
     title: 'Home',
     headerStyle : {
-      backgroundColor: 'orange'
+      backgroundColor: StyleVariables.PRIMARY.neutral
     },
     headerTintColor : '#fff',
   };
@@ -54,7 +50,6 @@ class Main extends React.Component {
     // Internet & localStorage availability is checked on mount because Android
     // v7 against which it is regularly tested often bugs aften a couple of 
     // expo reloadings.
-    this.props.loadDimensions();
     this.props.checkNetworkAvaibility();
     this.props.checkStorageAvailability();
   }
@@ -101,12 +96,12 @@ class Main extends React.Component {
     return (
       <View style={{ flexDirection: 'row' }}>
         {this.props.internet ? 
-          <Ionicons name='ios-wifi' size={25} color='green' /> :
-          <Ionicons name='ios-wifi' size={25} color='orange' />
+          <Ionicons name='ios-wifi' size={25} color={StyleVariables.success} /> :
+          <Ionicons name='ios-wifi' size={25} color={StyleVariables.warning} />
         }
         {this.props.storage ? 
-          <Ionicons name='md-disc' size={25} color='green' /> :
-          <Ionicons name='md-disc' size={25} color='red' />
+          <Ionicons name='md-disc' size={25} color={StyleVariables.success} /> :
+          <Ionicons name='md-disc' size={25} color={StyleVariables.danger} />
         }
       </View>
     )
@@ -114,7 +109,7 @@ class Main extends React.Component {
 
   renderHeaderDate() {
     return (
-      <View style={ styles.header }>
+      <View style={ Styles.header }>
         <View style={{ flex: 1, flexDirection: 'row' }}>
           <View>
             <FAIcon.Button size={12} backgroundColor='#ddd'
@@ -123,7 +118,7 @@ class Main extends React.Component {
             ></FAIcon.Button>
           </View>  
           <View style={{ paddingHorizontal: 20 }}>
-            <Text style={{ fontSize: 40 }}>
+            <Text style={ Styles.h1 }>
               {moment(this.props.date, 'YYYYMMDD').format('Do MMMM YYYY')}
             </Text>
           </View>
@@ -140,7 +135,7 @@ class Main extends React.Component {
 
   renderHeader() {
     return (
-      <View style={styles.header}>
+      <View style={Styles.header}>
         {this.renderControl()}
         {this.renderHeaderDate()}
       </View>
@@ -149,7 +144,7 @@ class Main extends React.Component {
 
   renderList() {
     return (
-      <View style={styles.list}>
+      <View style={Styles.list}>
         <ScrollView>
           <FlatList 
             data={this.props.dimensions}
@@ -168,12 +163,13 @@ class Main extends React.Component {
   render() {
 
     return (
-      <View style={styles.container}>
+      <View style={Styles.container}>
         {this.renderHeader()}
         {this.renderList()}
       </View>
     )}
 }
+
 
 export default connect(
   mapStateToProps,
