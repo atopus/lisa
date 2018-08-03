@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Text, View, ScrollView, Button, FlatList, Alert, StyleSheet } from 'react-native';
+import { Text, View, ScrollView, FlatList, Alert } from 'react-native';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 import SliderComponent from './Slider';
