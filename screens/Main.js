@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Text, View, ScrollView, Button, FlatList, Alert, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 import SliderComponent from './Slider';
@@ -46,14 +45,6 @@ class Main extends React.Component {
     headerTintColor : '#fff',
   };
 
-  componentDidMount() {
-    // Internet & localStorage availability is checked on mount because Android
-    // v7 against which it is regularly tested often bugs aften a couple of 
-    // expo reloadings.
-    this.props.checkNetworkAvaibility();
-    this.props.checkStorageAvailability();
-  }
-
   clearData() {
 
     const alert = (error) => {
@@ -92,24 +83,9 @@ class Main extends React.Component {
     this.props.setDate(newDate.format('YYYYMMDD'));
   }
 
-  renderControl() {
-    return (
-      <View style={{ flexDirection: 'row' }}>
-        {this.props.internet ? 
-          <Ionicons name='ios-wifi' size={25} color={StyleVariables.success} /> :
-          <Ionicons name='ios-wifi' size={25} color={StyleVariables.warning} />
-        }
-        {this.props.storage ? 
-          <Ionicons name='md-disc' size={25} color={StyleVariables.success} /> :
-          <Ionicons name='md-disc' size={25} color={StyleVariables.danger} />
-        }
-      </View>
-    )
-  }
-
   renderHeaderDate() {
     return (
-      <View style={ Styles.header }>
+      <View style={ [ Styles.header, { paddingTop: 15  } ] }>
         <View style={{ flex: 1, flexDirection: 'row' }}>
           <View>
             <FAIcon.Button size={12} backgroundColor='#ddd'
@@ -136,7 +112,6 @@ class Main extends React.Component {
   renderHeader() {
     return (
       <View style={Styles.header}>
-        {this.renderControl()}
         {this.renderHeaderDate()}
       </View>
     )
