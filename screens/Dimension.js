@@ -43,7 +43,8 @@ class Dimension extends React.Component {
     this.state = {
       edit: props.navigation.state.params.new || false,
       label: props.label,
-      new: props.navigation.state.params.new || false
+      isNew: props.navigation.state.params.new || false,
+      newOption: false,
     }
   }
   static navigationOptions = ({ navigation }) => ({
@@ -53,11 +54,11 @@ class Dimension extends React.Component {
 
   _onSubmit() {
 
-    this.state.new ?
+    this.state.isNew ?
       this.props.createDimension(this.state.label) :
       this.props.updateDimension(this.props.uid, this.state.label)
 
-    this.setState({ edit: false, new : false })
+    this.setState({ edit: false, isNew : false })
   }
 
   renderHeader() {
@@ -93,7 +94,9 @@ class Dimension extends React.Component {
 
   renderModList() {
 
-    const newIndex = Math.max.apply(0, this.props.options.map(o => parseInt(o.index))) + 1
+    const newIndex = this.props.options.length > 0 ?
+      Math.max.apply(1, this.props.options.map(o => parseInt(o.index))) + 1 :
+      1
 
     return (
       <View style={ styles.list }>
@@ -108,7 +111,7 @@ class Dimension extends React.Component {
                 navigation={this.props.navigation}
               />
             }} />
-          {this.state.new ? (
+          {this.state.newOption ? (
             <DimensionOption
               new={true}
               dimensionId={this.props.uid}
@@ -118,7 +121,7 @@ class Dimension extends React.Component {
             <View style={{ alignItems : 'center', width: '50%'}}>
               <Button 
                 title='+' 
-                onPress={() => this.setState({ new : true })} />
+                onPress={() => this.setState({ newOption : true })} />
             </View>
           )}
         </ScrollView>
@@ -130,7 +133,7 @@ class Dimension extends React.Component {
     return (
       <View style={ styles.container }>
         {this.renderHeader()}
-        {!this.state.new && this.renderModList()}
+        {!this.state.isNew && this.renderModList()}
       </View>
     )
   }
