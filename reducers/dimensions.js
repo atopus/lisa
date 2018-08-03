@@ -1,18 +1,16 @@
 import { combineReducers } from 'redux'
 import {
-  LOAD_DIMENSIONS_SUCCESS,
-  ADD_DIMENSION_SUCCESS,
-  SET_VALUE_SUCCESS,
+  LOAD_DIMENSIONS,
+  ADD_DIMENSION,
+  SET_VALUE,
+  ADD_DIMENSION_OPTION,
   UPDATE_DIMENSION_OPTION,
-  ADD_DIMENSION_OPTION_SUCCESS,
-  UPDATE_DIMENSION_OPTION_SUCCESS,
-  REMOVE_DIMENSION_OPTION_SUCCESS,
   REMOVE_DIMENSION_OPTION,
-  REMOVE_DIMENSION_SUCCESS,
-  UPDATE_DIMENSION_SUCCESS,
+  REMOVE_DIMENSION,
+  UPDATE_DIMENSION,
   SORT_DIMENSION_OPTION,
-  REMOVE_VALUE_SUCCESS,
-  LOAD_VALUES_SUCCESS,
+  REMOVE_VALUE,
+  LOAD_VALUES,
   EDIT_DIMENSION_OPTION
 } from '../constants/actions';
 
@@ -22,11 +20,11 @@ const option = (state={}, action) => {
 
   switch(action.type) {
 
-    case UPDATE_DIMENSION_OPTION_SUCCESS:
+    case UPDATE_DIMENSION_OPTION:
       if(action.payload.index !== state.index) return state
       return { ...state, text }     
 
-    case ADD_DIMENSION_OPTION_SUCCESS:
+    case ADD_DIMENSION_OPTION:
       return { text, index, edit : false }
 
     case EDIT_DIMENSION_OPTION:
@@ -42,16 +40,16 @@ const option = (state={}, action) => {
 const options = (state = [], action) => {
   switch(action.type) {
 
-    case ADD_DIMENSION_OPTION_SUCCESS:
+    case ADD_DIMENSION_OPTION:
       return [
         ...state,
         option(undefined, action)
       ]
-    case UPDATE_DIMENSION_OPTION_SUCCESS:
+    case UPDATE_DIMENSION_OPTION:
     case EDIT_DIMENSION_OPTION:
       return state.map(o => option(o, action))
 
-    case REMOVE_DIMENSION_OPTION_SUCCESS:
+    case REMOVE_DIMENSION_OPTION:
       return state.filter(o => o.index !== action.payload.index)
 
     case SORT_DIMENSION_OPTION :
@@ -73,7 +71,7 @@ const value = (state = {}, action) => {
 
   switch(action.type) {
 
-    case SET_VALUE_SUCCESS:
+    case SET_VALUE:
       return action.payload
 
     default:
@@ -86,19 +84,19 @@ const values = (state = {}, action) => {
   const date = Object.keys(action.payload)[0]
   
   switch(action.type) {
-    case SET_VALUE_SUCCESS:
+    case SET_VALUE:
       return {
       ...state,
       ...value(state[date], action)
     }
-    case REMOVE_VALUE_SUCCESS:
+    case REMOVE_VALUE:
       const newState = {}
       const delId = Object.keys(action.payload)[0]
       const newIds = Object.keys(state).filter(v => v !== delId)
       newIds.forEach(n => newState[n] = newState[n])
       return newState
 
-    case LOAD_VALUES_SUCCESS:
+    case LOAD_VALUES:
       return action.payload
 
     default:
@@ -118,7 +116,7 @@ const dimension = (state = {}, action) => {
   const { uid, label } = action.payload
   switch(action.type) {
 
-    case ADD_DIMENSION_SUCCESS:
+    case ADD_DIMENSION:
       if(!uid || !label) throw new Error("Missing argument.")
       return { 
         uid, 
@@ -127,13 +125,13 @@ const dimension = (state = {}, action) => {
         values : values(undefined, action)
       }
     
-    case UPDATE_DIMENSION_SUCCESS:
+    case UPDATE_DIMENSION:
       if(!uid || !label) throw new Error("Missing argument.")
       if(uid !== state.uid) return state
       return { ...state, label }
 
-    case SET_VALUE_SUCCESS :
-    case REMOVE_VALUE_SUCCESS:
+    case SET_VALUE :
+    case REMOVE_VALUE:
       if(state.uid !== action.payload.uid) return state
       const valueOption = {
         type: action.type,
@@ -144,7 +142,7 @@ const dimension = (state = {}, action) => {
         values: values(state.values, valueOption)
       }
 
-    case LOAD_VALUES_SUCCESS:
+    case LOAD_VALUES:
       if(state.uid !== action.payload.uid) return state
       const valuesOption = {
         type: action.type,
@@ -154,11 +152,11 @@ const dimension = (state = {}, action) => {
         ...state,
         values: values(state.values, valuesOption)
       }
-    case LOAD_DIMENSIONS_SUCCESS:
+    case LOAD_DIMENSIONS:
     case UPDATE_DIMENSION_OPTION:
-    case ADD_DIMENSION_OPTION_SUCCESS:
-    case REMOVE_DIMENSION_OPTION_SUCCESS:
-    case UPDATE_DIMENSION_OPTION_SUCCESS:
+    case ADD_DIMENSION_OPTION:
+    case REMOVE_DIMENSION_OPTION:
+    case UPDATE_DIMENSION_OPTION:
     case EDIT_DIMENSION_OPTION:
       if(state.uid !== action.payload.uid) return state
       const optionAction = {
@@ -179,29 +177,29 @@ export const dimensions = (state = [], action) => {
   
   switch(action.type) {
 
-    case SET_VALUE_SUCCESS:
-    case LOAD_VALUES_SUCCESS:
-    case REMOVE_VALUE_SUCCESS:
-    case ADD_DIMENSION_OPTION_SUCCESS:
-    case UPDATE_DIMENSION_OPTION_SUCCESS:
-    case REMOVE_DIMENSION_OPTION_SUCCESS:
+    case SET_VALUE:
+    case LOAD_VALUES:
+    case REMOVE_VALUE:
+    case ADD_DIMENSION_OPTION:
+    case UPDATE_DIMENSION_OPTION:
+    case REMOVE_DIMENSION_OPTION:
     case EDIT_DIMENSION_OPTION:
-    case UPDATE_DIMENSION_SUCCESS:
+    case UPDATE_DIMENSION:
     case SORT_DIMENSION_OPTION:
       return state.map(d =>  
         dimension(d, action)
       )
 
-    case ADD_DIMENSION_SUCCESS:
+    case ADD_DIMENSION:
       return [
         ...state,
         dimension(undefined, action)
       ]
 
-    case REMOVE_DIMENSION_SUCCESS:
+    case REMOVE_DIMENSION:
       return state.filter(dimension => dimension.uid !== action.payload.uid)
 
-    case LOAD_DIMENSIONS_SUCCESS:
+    case LOAD_DIMENSIONS:
       return action.payload
 
     default:

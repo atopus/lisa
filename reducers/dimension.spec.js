@@ -1,4 +1,4 @@
-import reducer, * as fromReducer from './dimensions'
+import * as fromReducer from './dimensions'
 import * as actions from '../constants/actions'
 
 describe("dimensions reducer", () => {
@@ -20,7 +20,7 @@ describe("dimensions reducer", () => {
 
       const state = []
       const action = {
-        type: actions.ADD_DIMENSION_SUCCESS,
+        type: actions.ADD_DIMENSION,
         payload: dimension1 
       }
       
@@ -32,7 +32,7 @@ describe("dimensions reducer", () => {
       
       const state = [dimension1]
       const action = {
-        type: actions.REMOVE_DIMENSION_SUCCESS,
+        type: actions.REMOVE_DIMENSION,
         payload: { uid : dimension1.uid }
       }
       
@@ -48,7 +48,7 @@ describe("dimensions reducer", () => {
         label: "Label of a modified dimension"
       }
       const action = {
-        type: actions.UPDATE_DIMENSION_SUCCESS,
+        type: actions.UPDATE_DIMENSION,
         payload : updated
       }
       
@@ -72,7 +72,7 @@ describe("dimensions reducer", () => {
         label: 'Dimension 3'
       }
       const action = {
-        type: actions.LOAD_DIMENSIONS_SUCCESS,
+        type: actions.LOAD_DIMENSIONS,
         payload: [d1, d2, d3]
       }
 
@@ -98,7 +98,7 @@ describe("dimensions reducer", () => {
     it('should handle ADD_DIMENSION_OPTION for a first option', () => {
       const state = [dimension]
       const action = {
-        type: actions.ADD_DIMENSION_OPTION_SUCCESS,
+        type: actions.ADD_DIMENSION_OPTION,
         payload : {
           uid: '1',
           option : option1
@@ -111,7 +111,7 @@ describe("dimensions reducer", () => {
     it('should handle ADD_DIMENSION_OPTION for a second option', () => {
       const state = [{ ...dimension, options: [option1]}]
       const action = {
-        type: actions.ADD_DIMENSION_OPTION_SUCCESS,
+        type: actions.ADD_DIMENSION_OPTION,
         payload : {
           uid: '1',
           option : option2
@@ -128,7 +128,7 @@ describe("dimensions reducer", () => {
         text: "Updated option text"
       }
       const action = {
-        type: actions.UPDATE_DIMENSION_OPTION_SUCCESS,
+        type: actions.UPDATE_DIMENSION_OPTION,
         payload: {
           uid: '1',
           option: updated
@@ -141,7 +141,7 @@ describe("dimensions reducer", () => {
     it('should handle REMOVE_DIMENSION_OPTION', () => {
       const state = [{ ...dimension, options: [option1] }]
       const action = {
-        type: actions.REMOVE_DIMENSION_OPTION_SUCCESS,
+        type: actions.REMOVE_DIMENSION_OPTION,
         payload: {
           uid: '1',
           option : {
@@ -184,7 +184,7 @@ describe("dimensions reducer", () => {
         '20180701' : 4
       }
       const action = {
-        type: actions.SET_VALUE_SUCCESS,
+        type: actions.SET_VALUE,
         payload: {
           uid: '1',
           value : value1
@@ -203,7 +203,7 @@ describe("dimensions reducer", () => {
         '20180701' : 4
       }
       const action = {
-        type: actions.REMOVE_VALUE_SUCCESS,
+        type: actions.REMOVE_VALUE,
         payload: {
           uid: '1',
           value: value1
@@ -220,7 +220,7 @@ describe("dimensions reducer", () => {
       const value3 = { '20180703' : 6 }
       const values = [value1, value2, value3 ]
       const action = {
-        type: actions.LOAD_VALUES_SUCCESS,
+        type: actions.LOAD_VALUES,
         payload: {
           uid: '1',
           values
@@ -230,6 +230,5 @@ describe("dimensions reducer", () => {
       expect(fromReducer.dimensions(state, action))
         .toEqual([{ ...dimension, values }])
     })
-    
   })
 })

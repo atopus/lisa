@@ -1,8 +1,6 @@
 import { combineReducers } from 'redux';
 import {
   LOAD_VALUES,
-  LOAD_VALUES_SUCCESS,
-  LOAD_VALUES_FAILED,
   SET_NETWORKING,
   SET_STORAGE_AVAILABLE,
   SET_DATE,
@@ -32,25 +30,6 @@ const app = (state = initialApp, action) => {
       return {
         ...state,
         loading: true
-      }
-
-    case LOAD_VALUES_SUCCESS:
-    case LOAD_VALUES_FAILED:
-      return {
-        ...state,
-        loading: false
-      }
-
-    case SET_NETWORKING :
-      return {
-        ...state,
-        networking: action.payload
-      }
-
-    case SET_STORAGE_AVAILABLE :
-      return {
-        ...state,
-        storage: action.payload
       }
 
     default:

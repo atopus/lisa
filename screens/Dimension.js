@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, ScrollView, Text, Button, FlatList, StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import { View, ScrollView, Text, Button, FlatList, StyleSheet, TouchableWithoutFeedback, KeyboardAvoidingView } from 'react-native'
 import Styles from '../Styles'
 import DimensionOption from './DimensionOption'
 import { TextInput } from 'react-native-gesture-handler';
@@ -16,7 +16,6 @@ import {
 const mapStateToProps = (state, ownProps) => {
   const uid = ownProps.navigation.state.params.dimensionId
   const dimension = uid ? getDimension(state, uid) : null 
-  // const data = getData(uid)
   const options = dimension ? Object.keys(dimension.options).map(key => ({
     key,
     index: parseInt(key),
@@ -134,10 +133,11 @@ class Dimension extends React.Component {
 
   render() {
     return (
-      <View style={ styles.container }>
+      <KeyboardAvoidingView style={ styles.container } 
+        behavior="padding" enabled>
         {this.renderHeader()}
         {!this.state.isNew && this.renderModList()}
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 }
