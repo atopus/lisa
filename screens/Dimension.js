@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, ScrollView, Text, Button, FlatList, StyleSheet, TouchableWithoutFeedback, KeyboardAvoidingView } from 'react-native'
-import Styles from '../Styles'
+import { View, ScrollView, Text, Button, FlatList, StyleSheet, TouchableWithoutFeedback, KeyboardAvoidingView, Alert } from 'react-native'
+import Styles, * as StyleVariables from '../Styles'
 import DimensionOption from './DimensionOption'
 import { TextInput } from 'react-native-gesture-handler';
 
@@ -10,7 +10,8 @@ import {
 } from '../reducers'
 import {
   createDimension,
-  updateDimension
+  updateDimension,
+  removeDimension
 } from '../actions/dimensions'
 
 const mapStateToProps = (state, ownProps) => {
@@ -32,7 +33,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   createDimension,
-  updateDimension
+  updateDimension,
+  removeDimension
 }
 
 class Dimension extends React.Component {
@@ -132,11 +134,33 @@ class Dimension extends React.Component {
   }
 
   render() {
+
+    const deleteConfirmation = () => Alert.alert('Are you sure ?', '', [
+        {
+          'text' : "Yes !", 
+          onPress : () => {
+            this.props.removeDimension(this.props.uid)
+            this.props.navigation.navigate('Home')
+          }
+        },
+        {
+          'text' : 'Nope'
+        }
+      ],
+      { cancelable: true }  
+    )
+
     return (
       <KeyboardAvoidingView style={ styles.container } 
         behavior="padding" enabled>
         {this.renderHeader()}
         {!this.state.isNew && this.renderModList()}
+
+        <Button 
+          title='Delete'
+          color={StyleVariables.danger}
+          onPress={() => deleteConfirmation() }        
+        />
       </KeyboardAvoidingView>
     )
   }

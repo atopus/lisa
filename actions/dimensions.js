@@ -6,7 +6,8 @@ import {
   ADD_DIMENSION_OPTION,
   UPDATE_DIMENSION_OPTION,
   REMOVE_DIMENSION_OPTION,
-  EDIT_DIMENSION_OPTION
+  EDIT_DIMENSION_OPTION,
+  REMOVE_DIMENSION
 } from '../constants/actions';
 
 export const editOption = (uid, index, edit) => ({
@@ -48,6 +49,13 @@ export const updateDimension = (uid, label) => ({
   payload : {
     uid,
     label
+  }
+})
+
+export const removeDimension = uid => ({
+  type: REMOVE_DIMENSION,
+  payload : {
+    uid
   }
 })
 
