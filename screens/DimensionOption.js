@@ -5,20 +5,24 @@ import { connect } from 'react-redux'
 import { 
   updateDimensionOption,
   createDimensionOption,
+  deleteDimensionOption,
   editOption
 } from '../actions/dimensions'
 import {
-  getOption
+  getOption,
+  getOptionFrequency
 } from '../reducers'
 
 const mapStateToProps = (state, props) => ({
   dimensionId: props.dimensionId,
-  option: getOption(state, props.dimensionId, props.index)
+  option: getOption(state, props.dimensionId, props.index),
+  frequency: getOptionFrequency(state, props.dimensionId, props.index)
 });
 
 const mapDispatchToProps = ({
   updateDimensionOption,
   createDimensionOption,
+  deleteDimensionOption,
   editOption
 });
 
@@ -53,7 +57,13 @@ class DimensionOption extends React.Component {
     }
   }
 
+  _onDelete() {
+    this.props.deleteDimensionOption(this.props.dimensionId, this.props.index)
+  }
+
   _renderText() {
+
+    const canDelete = this.props.frequency === 0
 
     const text = !this.props.option || this.props.option.edit ? (
       <View style={{ flex:1, flexDirection: 'row', alignItems:'center' }} >
@@ -81,10 +91,21 @@ class DimensionOption extends React.Component {
         <TouchableWithoutFeedback
           onPress={() => this.props.editOption(this.props.dimensionId, this.props.index, true)}
         >
-          <View>
-            <Text>
-              {this.state.text}
-            </Text>
+          <View style={{ flexDirection: 'row', flex: 1, alignItems:'center' }}>
+            <View style={{ width: canDelete ? '90%'  : '100%' }}>
+              <Text>
+                {this.state.text}
+              </Text>
+            </View>
+
+            {canDelete && (<View style={{width: '10%'}}>
+              <Button
+                style={{ width: 1 }}
+                onPress={() => this._onDelete()}
+                title='x'
+              />
+            </View>)
+            }
           </View>
         </TouchableWithoutFeedback>
       </View>
