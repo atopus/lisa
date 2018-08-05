@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
-import { Text, View, Slider, TouchableHighlight, StyleSheet, Alert } from 'react-native';
+import { Text, View, Slider, TouchableHighlight, Alert } from 'react-native';
 import Styles, * as StyleVariables from '../Styles';
 
 import {
@@ -29,7 +30,7 @@ const mapDispatchToProps = {
 
 class SliderComponent extends React.Component {
 
-  onValueChange(value) {
+  _onValueChange(value) {
     return this.props.setValue(this.props.dimension.uid, this.props.date, value)
   }
 
@@ -101,7 +102,7 @@ class SliderComponent extends React.Component {
               minimumValue={min} 
               maximumValue={max} 
               value={sliderValue} 
-              onValueChange={value => this.onValueChange(value)} 
+              onValueChange={value => this._onValueChange(value)} 
               step={1}
               thumbTintColor={color}
               minimumTrackTintColor={color}
@@ -112,6 +113,12 @@ class SliderComponent extends React.Component {
       </TouchableHighlight>
     )
   }
+}
+
+SliderComponent.propTypes = {
+  dimension: PropTypes.object.isRequired,
+  value: PropTypes.number,
+  date: PropTypes.string.isRequired
 }
 
 export default connect(

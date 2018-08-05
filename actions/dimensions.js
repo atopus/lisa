@@ -59,7 +59,7 @@ export const removeDimension = uid => ({
   }
 })
 
-export const createDimensionOption = (dimensionId, index, text) => ({
+export const createOption = (dimensionId, index, text) => ({
   type: ADD_DIMENSION_OPTION,
   payload: { 
     uid : dimensionId, 
@@ -67,7 +67,7 @@ export const createDimensionOption = (dimensionId, index, text) => ({
   }
 })
 
-export const updateDimensionOption = (dimensionId, index, text) => ({
+export const updateOption = (dimensionId, index, text) => ({
   type: UPDATE_DIMENSION_OPTION,
   payload: { 
     uid : dimensionId, 
@@ -75,7 +75,7 @@ export const updateDimensionOption = (dimensionId, index, text) => ({
   }
 })
 
-export const deleteDimensionOption = (dimensionId, index) => ({
+export const deleteOption = (dimensionId, index) => ({
   type: REMOVE_DIMENSION_OPTION,
   payload: {
     uid: dimensionId,

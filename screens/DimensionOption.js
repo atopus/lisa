@@ -1,11 +1,12 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { View, Text, TextInput, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import Styles, * as StyleVariables from '../Styles'
 import { connect } from 'react-redux'
 import { 
-  updateDimensionOption,
-  createDimensionOption,
-  deleteDimensionOption,
+  updateOption,
+  createOption,
+  deleteOption,
   editOption
 } from '../actions/dimensions'
 import {
@@ -16,14 +17,15 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 const mapStateToProps = (state, props) => ({
   dimensionId: props.dimensionId,
+  index: props.index,
   option: getOption(state, props.dimensionId, props.index),
   frequency: getOptionFrequency(state, props.dimensionId, props.index)
 });
 
 const mapDispatchToProps = ({
-  updateDimensionOption,
-  createDimensionOption,
-  deleteDimensionOption,
+  updateOption,
+  createOption,
+  deleteOption,
   editOption
 });
 
@@ -32,7 +34,7 @@ class DimensionOption extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      edit : props.new || false,
+      edit : props.new || (props.option && props.option.edit) || false,
       text: props.option ? props.option.text : '',
       new : props.new || false,
       index: props.index
@@ -42,14 +44,14 @@ class DimensionOption extends React.Component {
   _onSubmit() {
 
     if(this.state.new) {
-      this.props.createDimensionOption(
+      this.props.createOption(
         this.props.dimensionId, 
         parseInt(this.props.index), 
         this.state.text
       )
       this.setState({ edit: false, text: '' })
     } else {
-      this.props.updateDimensionOption(
+      this.props.updateOption(
         this.props.dimensionId, 
         parseInt(this.props.index), 
         this.state.text
@@ -59,7 +61,7 @@ class DimensionOption extends React.Component {
   }
 
   _onDelete() {
-    this.props.deleteDimensionOption(this.props.dimensionId, this.props.index)
+    this.props.deleteOption(this.props.dimensionId, this.props.index)
   }
 
   _renderText() {
@@ -171,6 +173,13 @@ const styles = StyleSheet.create({
     width: `${right}%`
   }
 })
+
+DimensionOption.propTypes = {
+  dimensionId: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
+  option: PropTypes.object,
+  frequency: PropTypes.number
+}
 
 export default connect(
   mapStateToProps,

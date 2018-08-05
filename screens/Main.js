@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import { Text, View, ScrollView, FlatList, Button } from 'react-native';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
@@ -9,15 +10,9 @@ import {
   setDate
 } from '../actions/main.js';
 import {
-  getStorageAvailability,
-  getNetworkAvailability,
   getDate,
   getDimensions
 } from '../reducers';
-import {
-  checkNetworkAvaibility,
-  checkStorageAvailability
-} from '../actions/app';
 
 import moment from 'moment/min/moment-with-locales';
 moment.locale('fr');
@@ -27,17 +22,13 @@ const mapStateToProps = state => {
   dimensions = dimensions && dimensions.length > 0 ?
     dimensions.map(d => ({ ...d, key: d.uid })) : []
   return {
-    storage : getStorageAvailability(state),
-    internet : getNetworkAvailability(state),
     date : getDate(state),
     dimensions
   }
 }
 
 const mapDispatchToProps = {
-  setDate : setDate,
-  checkNetworkAvaibility : checkNetworkAvaibility,
-  checkStorageAvailability : checkStorageAvailability
+  setDate : setDate
 };
 
 class Main extends React.Component {
@@ -49,7 +40,6 @@ class Main extends React.Component {
     },
     headerTintColor : '#fff',
   };
-
 
   _resetDate() {
     this.setState({ date : moment().format('YYYYMMDD') });
@@ -92,14 +82,13 @@ class Main extends React.Component {
                 <View style={Styles.separator} />
             )}
             data={this.props.dimensions}
-            renderItem={({item}) => {
-              return (
+            renderItem={({item}) => (
                 <SliderComponent
                   uid={item.uid}
                   date={this.props.date}
                   navigation={this.props.navigation}
               />) 
-          }}/>
+          }/>
           <View style={{ alignItems : 'center', paddingBottom: 5 }}>
             <FAIcon.Button
               name='plus'
@@ -123,6 +112,11 @@ class Main extends React.Component {
         {this._renderList()}
       </View>
     )}
+}
+
+Main.propTypes = {
+  date : PropTypes.string.isRequired,
+  dimensions: PropTypes.array.isRequired
 }
 
 export default connect(

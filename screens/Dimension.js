@@ -1,6 +1,7 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { View, ScrollView, Text, Button, FlatList, StyleSheet, TouchableWithoutFeedback, KeyboardAvoidingView, Alert } from 'react-native'
+import { View, ScrollView, Text, FlatList, TouchableWithoutFeedback, KeyboardAvoidingView, Alert } from 'react-native'
 import Styles, * as StyleVariables from '../Styles'
 import DimensionOption from './DimensionOption'
 import { TextInput } from 'react-native-gesture-handler';
@@ -18,17 +19,17 @@ import {
 const mapStateToProps = (state, props) => {
   const uid = props.navigation.state.params.dimensionId
   const dimension = uid ? getDimension(state, uid) : null 
-  const options = dimension ? Object.keys(dimension.options).map(key => ({
-    key,
-    index: parseInt(key),
-    text : dimension.options[key].text
-  })) : []
+  if(dimension) {
+    dimension.options = dimension ? Object.keys(dimension.options).map(key => ({
+      key,
+      ...dimension.options[key]
+    })) : []
+  }
 
   return {
     uid,
-    label: dimension ? dimension.label : null,
-    options,
-    new : props.navigation.state.params.new || false
+    dimension,
+    new : Boolean(props.navigation.state.params.new) || false
   } 
 }
 
@@ -43,8 +44,8 @@ class Dimension extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      label: props.dimension && props.dimension.label || '', 
       edit: props.navigation.state.params.new || false,
-      label: props.label,
       isNew: props.navigation.state.params.new || false,
       newOption: false,
     }
@@ -109,25 +110,33 @@ class Dimension extends React.Component {
 
   _renderOptionList() {
 
-    const newIndex = this.props.options.length > 0 ?
-      Math.max.apply(1, this.props.options.map(o => parseInt(o.index))) + 1 :
-      0
+    const newIndex = 
+      this.props.dimension && this.props.dimension.options.length > 0 ?
+        Math.max.apply(1, this.props.dimension.options.map(o => parseInt(o.index))) + 1 :
+        0
+
+    const options = this.props.dimension ? this.props.dimension.options : []
 
     return (
       <View style={{ flex: 5 }}>
         <ScrollView style={ Styles.scrollList }>
-          <FlatList
-            ItemSeparatorComponent={({highlighted}) => (
-                  <View style={[Styles.separator, highlighted && {marginLeft: 0}]} />
+
+          {options.length > 0 && (
+            <FlatList
+              ItemSeparatorComponent={({highlighted}) => (
+                    <View style={[Styles.separator, highlighted && {marginLeft: 0}]} />
+                )}
+              data={options}
+              renderItem={({item}) => (
+                <DimensionOption 
+                  index={item.index}
+                  text={item.text}
+                  dimensionId={this.props.uid}
+                />
               )}
-            data={this.props.options}
-            renderItem={({item}) => {
-              return <DimensionOption 
-                index={item.index}
-                text={item.text}
-                dimensionId={this.props.uid}
-              />
-            }} />
+            />
+          )}
+          
           {this.state.newOption ? (
             <DimensionOption
               new={true}
@@ -143,6 +152,7 @@ class Dimension extends React.Component {
                 </FAIcon.Button>
             </View>
           )}
+
         </ScrollView>
       </View>
     )
@@ -152,15 +162,16 @@ class Dimension extends React.Component {
 
     const canDelete = !this.props.new
 
-    const deleteConfirmation = () => Alert.alert('Are you sure ?', '', [
-        {
+    const deleteConfirmation = () => Alert.alert(
+      'Are you sure ?', 
+      '', 
+      [{
           'text' : "Yes !", 
           onPress : () => {
-            this.props.removeDimension(this.props.uid)
-            this.props.navigation.navigate('Home')
+          this.props.removeDimension(this.props.uid)
+          this.props.navigation.navigate('Home')
           }
-        },
-        {
+        }, {
           'text' : 'Nope'
         }
       ],
@@ -169,13 +180,13 @@ class Dimension extends React.Component {
 
     return (
       <KeyboardAvoidingView 
-        style={ [ Styles.container ]  } 
+        style={ Styles.container } 
         behavior="padding" enabled
         keyboardVerticalOffset={50}
-        >
+      >
+
         {this._renderHeader()}
         {!this.state.isNew && this._renderOptionList()}
-
 
         {canDelete && (
           <View style={ Styles.footer }>
@@ -193,6 +204,11 @@ class Dimension extends React.Component {
       </KeyboardAvoidingView>
     )
   }
+}
+
+Dimension.propTypes = {
+  dimension : PropTypes.object,
+  new: PropTypes.bool.isRequired
 }
 
 export default connect(
