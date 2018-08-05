@@ -27,17 +27,18 @@ export const COMPLEMENT2 = {
   darker: 'DA9B00'
 }
 
+export const lightgrey = 'lightgrey'
+export const grey = 'grey'
+
 export const primary = PRIMARY.neutral
 
 export const danger = COMPLEMENT1.dark
 export const warning = PRIMARY.light
-export const info = COMPLEMENT2.neutral
+export const info = '#FFE700'// COMPLEMENT2.neutral
 // export const danger = '#A10800'   // red
 // export const warning = 'orange'  // orange
 // export const info = '#FFE700'    // yellow 
 export const success = '#D5F800' // ligth green
-
-export const lightgrey = 'lightgrey'
 
 export default StyleSheet.create({
   container: {
@@ -49,29 +50,47 @@ export default StyleSheet.create({
     flex: 1,
     padding: 10
   },
+  scrollList : {
+    paddingHorizontal: 15
+  },
   list: {
     flex: 5
   },
   item : {
     borderLeftWidth : 6,
-    paddingBottom: 10
+    paddingBottom: 10,
+    paddingHorizontal: 10
   },
   header: {
     flex: 1,
     alignItems : 'center', 
-    justifyContent : 'center'
+    justifyContent : 'space-around',
+    flexDirection: 'row'
   },
   footer : {
-    flex: 1
+    flex: 1,
+    alignItems: 'center'
   },
   textInput : {
     backgroundColor:'white', 
-    borderColor: '#eee',
+    borderColor: 'white',
     borderWidth: 1,
     borderRadius: 5,
-    paddingHorizontal: 5
+    paddingHorizontal: 5,
+    color: 'grey'
   },
   h1 : {
     fontSize: 40
+  },
+  h2 : {
+    fontSize: 24
+  },
+  p : {
+    color: grey,
+    fontSize: 16
+  },
+  separator : {
+    backgroundColor: '#eee',
+    height: 1
   }
 });

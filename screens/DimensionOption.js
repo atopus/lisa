@@ -1,6 +1,6 @@
 import React from 'react'
-import { View, Text, TextInput, StyleSheet, Button, TouchableWithoutFeedback } from 'react-native'
-import Styles from '../Styles'
+import { View, Text, TextInput, StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import Styles, * as StyleVariables from '../Styles'
 import { connect } from 'react-redux'
 import { 
   updateDimensionOption,
@@ -12,6 +12,7 @@ import {
   getOption,
   getOptionFrequency
 } from '../reducers'
+import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 const mapStateToProps = (state, props) => ({
   dimensionId: props.dimensionId,
@@ -66,9 +67,12 @@ class DimensionOption extends React.Component {
     const canDelete = this.props.frequency === 0
 
     const text = !this.props.option || this.props.option.edit ? (
-      <View style={{ flex:1, flexDirection: 'row', alignItems:'center' }} >
-        <View style={{ width: '80%'}}>
+
+      // Text Input
+      <View style={ styles.textWrapper } >
+        <View style={{ width: '70%'}}>
           <TextInput
+            underlineColorAndroid={StyleVariables.lightgrey}
             onChangeText={text => this.setState({ text })}
             style={ Styles.textInput }
             multiline={true}
@@ -77,38 +81,46 @@ class DimensionOption extends React.Component {
             {this.state.text}
           </TextInput>
         </View>
-        <View style={{ width: '20%'}}>
-          <Button 
-            style={{ width: 2 }}
+        <View style={{ width: '30%', flexDirection: 'row', justifyContent: 'space-around'}}>
+          <FAIcon.Button 
+            name="check"
+            backgroundColor={StyleVariables.success}
             onPress={() => this._onSubmit()}
-            disabled={!this.state.text || !this.state.text.trim()}
-            title='ok' 
+            disabled={!this.state.text || !this.state.text.trim()} 
+          />
+          <FAIcon.Button
+            name="minus"
+            backgroundColor={StyleVariables.warning}
+            onPress={() => this.props.editOption(this.props.dimensionId, this.props.index, false)}
           />
         </View>
       </View>
     ) : (
-      <View style={{ flex:1, flexDirection: 'row', alignItems:'center' }} >
-        <TouchableWithoutFeedback
-          onPress={() => this.props.editOption(this.props.dimensionId, this.props.index, true)}
-        >
-          <View style={{ flexDirection: 'row', flex: 1, alignItems:'center' }}>
-            <View style={{ width: canDelete ? '90%'  : '100%' }}>
-              <Text>
-                {this.state.text}
-              </Text>
-            </View>
 
-            {canDelete && (<View style={{width: '10%'}}>
-              <Button
-                style={{ width: 1 }}
+      // Label
+      
+      <TouchableWithoutFeedback
+        onPress={() => this.props.editOption(this.props.dimensionId, this.props.index, true)}
+      >
+        <View style={ styles.textWrapper }>
+        
+          <Text style={[ Styles.p , { width: canDelete ? '90%'  : '100%' } ]}>
+            {this.state.text}
+          </Text>
+
+          {canDelete && (
+            <View style={{ width: '10%' }}>
+              <FAIcon
+                name='trash'
+                style={ Styles.p }
+                size={10}
                 onPress={() => this._onDelete()}
-                title='x'
               />
-            </View>)
-            }
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
+            </View>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
+    
     )
 
     return (
@@ -118,14 +130,18 @@ class DimensionOption extends React.Component {
     )
   }
 
+  _renderIndex() {
+    return (
+      <View style={ styles.index }>
+        <Text style={ Styles.p }>{this.props.index}.</Text>
+      </View>
+    )
+  }
+
   render() {
     return (
-      <View style={ styles.container }>
-        {this.props.option && (
-          <View style={ styles.index }>
-            <Text>{this.props.index}.</Text>
-          </View>
-        )}
+      <View style={ styles.row }>
+        {this.props.option && this._renderIndex()}
         {this._renderText()}
       </View>
     )
@@ -136,15 +152,20 @@ const left = 5;
 const right = 100 - left;
 
 const styles = StyleSheet.create({
-  container : {
+  row : {
     flex: 1, 
     flexDirection: 'row',
-    paddingVertical: 5,
-    width: '100%'
+    paddingVertical: 5
   },
   index : {
     width: `${left}%`,
-    justifyContent: 'center'
+    justifyContent: 'center',
+  },
+  textWrapper : {
+    flex: 1, 
+    flexDirection: 'row', 
+    alignItems:'center', 
+    minHeight: 35
   },
   text : {
     width: `${right}%`

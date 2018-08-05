@@ -36,7 +36,7 @@ class SliderComponent extends React.Component {
   _getColor(value, thresholds) {
 
     if(value === false || value === undefined || value === null) 
-      return 'lightgrey';
+      return StyleVariables.lightgrey;
 
     const COLORS = [
       StyleVariables.danger, // red.
@@ -87,18 +87,17 @@ class SliderComponent extends React.Component {
         underlayColor={StyleVariables.COMPLEMENT2.lighter}
       >
         <View style={[ Styles.item, { borderLeftColor: color } ]}>
-          <View style={{ flex: 1, paddingHorizontal : 10 }}>
-            <Text style={{ flex: 1, fontSize: 24 }}>{this.props.dimension.label} :</Text>
+          <View style={{ flex: 1, }}>
+            <Text style={ Styles.h2 }>{this.props.dimension.label} :</Text>
           </View>
-          <View style={{ flex: 2, paddingHorizontal: 10, paddingVertical: 5 }}>
-            <Text style={{ fontSize: 16, minHeight: 35, color: 'grey' }}>
+          <View style={{ flex: 2 }}>
+            <Text style={ [ Styles.p, { minHeight: 35 }] }>
               {valueLabel}
             </Text>
           </View>
           <View style={{ flex: 1 }}>
           
-            <Slider 
-              style={{ flex: 1, width:'100%' }} 
+            <Slider  
               minimumValue={min} 
               maximumValue={max} 
               value={sliderValue} 
@@ -114,16 +113,6 @@ class SliderComponent extends React.Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container : {
-
-  },
-  slider : {
-    flex: 1,
-    width: '100%'
-  }
-})
 
 export default connect(
   mapStateToProps,

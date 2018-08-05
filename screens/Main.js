@@ -42,13 +42,6 @@ const mapDispatchToProps = {
 
 class Main extends React.Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      new: false
-    }
-  }
-
   static navigationOptions = {
     title: 'Home',
     headerStyle : {
@@ -58,59 +51,46 @@ class Main extends React.Component {
   };
 
 
-  resetDate() {
+  _resetDate() {
     this.setState({ date : moment().format('YYYYMMDD') });
   }
 
-  previousDate() {
+  _previousDate() {
     const newDate = moment(this.props.date, 'YYYYMMDD').subtract(1, 'days');
     this.props.setDate(newDate.format('YYYYMMDD'));
   }
 
-  nextDate() {
+  _nextDate() {
     const newDate = moment(this.props.date, 'YYYYMMDD').add(1, 'days');
     this.props.setDate(newDate.format('YYYYMMDD'));
   }
 
-  renderHeaderDate() {
-    return (
-      <View style={ [ Styles.header, { paddingTop: 15  } ] }>
-        <View style={{ flex: 1, flexDirection: 'row' }}>
-          <View>
-            <FAIcon.Button size={12} backgroundColor='#ddd'
-              name="chevron-left"
-              onPress={() => this.previousDate()}
-            ></FAIcon.Button>
-          </View>  
-          <View style={{ paddingHorizontal: 20 }}>
-            <Text style={ Styles.h1 }>
-              {moment(this.props.date, 'YYYYMMDD').format('Do MMMM YYYY')}
-            </Text>
-          </View>
-          <View>
-            <FAIcon.Button size={12} backgroundColor='#ddd'
-              name="chevron-right"
-              onPress={() => this.nextDate()}
-            ></FAIcon.Button>
-          </View>
-        </View>
-      </View>
-    )
-  }
-
-  renderHeader() {
+  _renderHeader() {
     return (
       <View style={Styles.header}>
-        {this.renderHeaderDate()}
+        <FAIcon.Button size={12} backgroundColor='#ddd'
+          name="chevron-left"
+          onPress={() => this._previousDate()}
+        />
+        <Text style={ Styles.h1 }>
+          {moment(this.props.date, 'YYYYMMDD').format('Do MMMM YYYY')}
+        </Text>
+        <FAIcon.Button size={12} backgroundColor='#ddd'
+          name="chevron-right"
+          onPress={() => this._nextDate()}
+        />
       </View>
     )
   }
 
-  renderList() {
+  _renderList() {
     return (
       <View style={Styles.list}>
         <ScrollView>
           <FlatList 
+            ItemSeparatorComponent={({highlighted}) => (
+                <View style={Styles.separator} />
+            )}
             data={this.props.dimensions}
             renderItem={({item}) => {
               return (
@@ -120,12 +100,15 @@ class Main extends React.Component {
                   navigation={this.props.navigation}
               />) 
           }}/>
-          <View style={{ alignItems : 'center', width: '50%'}}>
-            <Button 
-              title='+' 
+          <View style={{ alignItems : 'center', paddingBottom: 5 }}>
+            <FAIcon.Button
+              name='plus'
+              backgroundColor={StyleVariables.primary}
               onPress={() => this.props.navigation.navigate('Dimension', {
                 new: true
-              })} />
+              })}>
+                Create dimension
+              </FAIcon.Button>
           </View>
         </ScrollView>
       </View>
@@ -136,12 +119,11 @@ class Main extends React.Component {
 
     return (
       <View style={Styles.container}>
-        {this.renderHeader()}
-        {this.renderList()}
+        {this._renderHeader()}
+        {this._renderList()}
       </View>
     )}
 }
-
 
 export default connect(
   mapStateToProps,

@@ -4,6 +4,7 @@ import { View, ScrollView, Text, Button, FlatList, StyleSheet, TouchableWithoutF
 import Styles, * as StyleVariables from '../Styles'
 import DimensionOption from './DimensionOption'
 import { TextInput } from 'react-native-gesture-handler';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 import {
   getDimension
@@ -14,8 +15,8 @@ import {
   removeDimension
 } from '../actions/dimensions'
 
-const mapStateToProps = (state, ownProps) => {
-  const uid = ownProps.navigation.state.params.dimensionId
+const mapStateToProps = (state, props) => {
+  const uid = props.navigation.state.params.dimensionId
   const dimension = uid ? getDimension(state, uid) : null 
   const options = dimension ? Object.keys(dimension.options).map(key => ({
     key,
@@ -27,7 +28,7 @@ const mapStateToProps = (state, ownProps) => {
     uid,
     label: dimension ? dimension.label : null,
     options,
-    new : false
+    new : props.navigation.state.params.new || false
   } 
 }
 
@@ -49,7 +50,11 @@ class Dimension extends React.Component {
     }
   }
   static navigationOptions = ({ navigation }) => ({
-    title: 'Dimension'
+    title: 'Dimension',
+    headerStyle : {
+      backgroundColor: StyleVariables.PRIMARY.neutral
+    },
+    headerTintColor : '#fff'
   })
 
 
@@ -65,23 +70,29 @@ class Dimension extends React.Component {
     this.setState({ edit: false, isNew : false })
   }
 
-  renderHeader() {
+  _renderHeader() {
     return this.state.edit ? (
-      <View style={{ flex:1, flexDirection: 'row', alignItems:'center' }} >
-        <View style={{ width: '80%' }}>
+      <View style={ Styles.header } >
+        <View style={{ width: '70%' }}>
           <TextInput 
-            style={ Styles.textInput }
+            underlineColorAndroid={StyleVariables.lightgrey}
+            style={ [Styles.textInput, Styles.h1 ] }
             onChangeText={label => this.setState({ label }) }
           >
             {this.state.label}
           </TextInput>
         </View>
-        <View style={{ width: '20%' }}>
-          <Button
-            title='ok'
-            style={{ width: 2 }}
-            onPress={() => this._onSubmit()}
+        <View style={{ width: '25%', flexDirection: 'row', flex:1, justifyContent: 'space-around' }}>
+          <FAIcon.Button
+            name='check'
+            backgroundColor={StyleVariables.success}
+            onPress={() => this.state.label && this._onSubmit()}
             disabled={!this.state.label || !this.state.label.trim()} 
+          />
+          <FAIcon.Button
+            name='minus'
+            backgroundColor={StyleVariables.warning}
+            onPress={() => this.setState({ edit: false })}
           />
         </View>
       </View>
@@ -89,43 +100,47 @@ class Dimension extends React.Component {
       <TouchableWithoutFeedback
         onPress={() => this.setState({ edit: true })}
       >
-        <View style={ styles.header }>
-          <Text style={ styles.h1 }>{this.state.label}</Text>
+        <View style={ Styles.header }>
+          <Text style={ Styles.h1 }>{this.state.label}</Text>
         </View>
       </TouchableWithoutFeedback>
     )
   }
 
-  renderModList() {
+  _renderOptionList() {
 
     const newIndex = this.props.options.length > 0 ?
       Math.max.apply(1, this.props.options.map(o => parseInt(o.index))) + 1 :
       0
 
     return (
-      <View style={ styles.list }>
-        <ScrollView style={{ paddingHorizontal:15 }}>
+      <View style={{ flex: 5 }}>
+        <ScrollView style={ Styles.scrollList }>
           <FlatList
+            ItemSeparatorComponent={({highlighted}) => (
+                  <View style={[Styles.separator, highlighted && {marginLeft: 0}]} />
+              )}
             data={this.props.options}
             renderItem={({item}) => {
               return <DimensionOption 
                 index={item.index}
                 text={item.text}
                 dimensionId={this.props.uid}
-                navigation={this.props.navigation}
               />
             }} />
           {this.state.newOption ? (
             <DimensionOption
               new={true}
               dimensionId={this.props.uid}
-              navigation={this.props.navigation}
               index={newIndex}
             />) : (
-            <View style={{ alignItems : 'center', width: '50%'}}>
-              <Button 
-                title='+' 
-                onPress={() => this.setState({ newOption : true })} />
+            <View style={{ alignItems : 'center', flex: 1 }}>
+              <FAIcon.Button
+                name='plus'
+                backgroundColor={ StyleVariables.primary } 
+                onPress={() => this.setState({ newOption : true })}>
+                  Create option
+                </FAIcon.Button>
             </View>
           )}
         </ScrollView>
@@ -134,6 +149,8 @@ class Dimension extends React.Component {
   }
 
   render() {
+
+    const canDelete = !this.props.new
 
     const deleteConfirmation = () => Alert.alert('Are you sure ?', '', [
         {
@@ -151,38 +168,32 @@ class Dimension extends React.Component {
     )
 
     return (
-      <KeyboardAvoidingView style={ styles.container } 
-        behavior="padding" enabled>
-        {this.renderHeader()}
-        {!this.state.isNew && this.renderModList()}
+      <KeyboardAvoidingView 
+        style={ [ Styles.container ]  } 
+        behavior="padding" enabled
+        keyboardVerticalOffset={50}
+        >
+        {this._renderHeader()}
+        {!this.state.isNew && this._renderOptionList()}
 
-        <Button 
-          title='Delete'
-          color={StyleVariables.danger}
-          onPress={() => deleteConfirmation() }        
-        />
+
+        {canDelete && (
+          <View style={ Styles.footer }>
+            <FAIcon.Button 
+              style={{ width: '50%'}} 
+              name='trash'
+              backgroundColor={StyleVariables.danger}
+              onPress={() => deleteConfirmation() }        
+            >
+              Delete dimension
+            </FAIcon.Button>
+          </View>
+        )}
+
       </KeyboardAvoidingView>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white'
-  },
-  header : {
-    flex: 1,
-    alignItems : 'center', 
-    justifyContent : 'center'
-  },
-  list : {
-    flex: 5,
-  },
-  h1 : {
-    fontSize: 40
-  }
-})
 
 export default connect(
   mapStateToProps,
