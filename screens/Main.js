@@ -34,7 +34,7 @@ const mapDispatchToProps = {
 class Main extends React.Component {
 
   static navigationOptions = {
-    title: 'Home',
+    title: 'Liska',
     headerStyle : {
       backgroundColor: StyleVariables.PRIMARY.neutral
     },
@@ -58,14 +58,20 @@ class Main extends React.Component {
   _renderHeader() {
     return (
       <View style={Styles.header}>
-        <FAIcon.Button size={12} backgroundColor='#ddd'
+        <FAIcon size={20}
+          style={ Styles.buttonIcon } 
+          color={StyleVariables.lightgrey}
           name="chevron-left"
           onPress={() => this._previousDate()}
         />
+        
         <Text style={ Styles.h1 }>
           {moment(this.props.date, 'YYYYMMDD').format('Do MMMM YYYY')}
         </Text>
-        <FAIcon.Button size={12} backgroundColor='#ddd'
+      
+        <FAIcon size={20}
+          style={ Styles.buttonIcon }
+          color={StyleVariables.lightgrey}
           name="chevron-right"
           onPress={() => this._nextDate()}
         />

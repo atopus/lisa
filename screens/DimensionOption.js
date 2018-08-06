@@ -72,7 +72,7 @@ class DimensionOption extends React.Component {
 
       // Text Input
       <View style={ styles.textWrapper } >
-        <View style={{ width: '70%'}}>
+        <View style={{ width: '80%'}}>
           <TextInput
             underlineColorAndroid={StyleVariables.lightgrey}
             onChangeText={text => this.setState({ text })}
@@ -83,16 +83,20 @@ class DimensionOption extends React.Component {
             {this.state.text}
           </TextInput>
         </View>
-        <View style={{ width: '30%', flexDirection: 'row', justifyContent: 'space-around'}}>
-          <FAIcon.Button 
+        <View style={{ width: '20%', flexDirection: 'row', justifyContent: 'space-around'}}>
+          <FAIcon
+            style={ Styles.buttonIcon }
+            size={16}
             name="check"
-            backgroundColor={StyleVariables.success}
+            color={StyleVariables.success}
             onPress={() => this._onSubmit()}
             disabled={!this.state.text || !this.state.text.trim()} 
           />
-          <FAIcon.Button
-            name="minus"
-            backgroundColor={StyleVariables.warning}
+          <FAIcon
+            style={ Styles.buttonIcon }
+            size={16}
+            name="ban"
+            color={StyleVariables.warning}
             onPress={() => this.props.editOption(this.props.dimensionId, this.props.index, false)}
           />
         </View>

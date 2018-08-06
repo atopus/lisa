@@ -74,7 +74,7 @@ class Dimension extends React.Component {
   _renderHeader() {
     return this.state.edit ? (
       <View style={ Styles.header } >
-        <View style={{ width: '70%' }}>
+        <View style={{ width: '80%' }}>
           <TextInput 
             underlineColorAndroid={StyleVariables.lightgrey}
             style={ [Styles.textInput, Styles.h1 ] }
@@ -83,18 +83,24 @@ class Dimension extends React.Component {
             {this.state.label}
           </TextInput>
         </View>
-        <View style={{ width: '25%', flexDirection: 'row', flex:1, justifyContent: 'space-around' }}>
-          <FAIcon.Button
+        <View style={{ width: '20%', flexDirection: 'row', flex:1, justifyContent: 'space-around' }}>
+          <FAIcon
+            style={ Styles.buttonIcon }
+            size={20}
             name='check'
-            backgroundColor={StyleVariables.success}
+            color={ StyleVariables.success } 
             onPress={() => this.state.label && this._onSubmit()}
             disabled={!this.state.label || !this.state.label.trim()} 
           />
-          <FAIcon.Button
-            name='minus'
-            backgroundColor={StyleVariables.warning}
-            onPress={() => this.setState({ edit: false })}
-          />
+          {!this.state.isNew && (
+            <FAIcon
+              style={ Styles.buttonIcon }
+              size={20}
+              name='ban'
+              color={ StyleVariables.warning }
+              onPress={() => this.setState({ edit: false })}
+            />
+          )}
         </View>
       </View>
     ) : (

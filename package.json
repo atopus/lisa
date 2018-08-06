@@ -1,6 +1,6 @@
 {
   "name": "liska",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "MIT",
   "author": {
     "name": "Paul Antropius",
@@ -45,6 +45,5 @@
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
     "uuid": "^3.3.2"
-  },
-  "privacy": "unlisted"
+  }
 }

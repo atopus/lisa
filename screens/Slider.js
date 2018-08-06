@@ -54,6 +54,9 @@ class SliderComponent extends React.Component {
   }
 
   _getOptionLabel(value, options) {
+
+    if(options.length < 2) return 'ℹ️ You must set at least 2 options.'
+
     if(value !== false && value !== undefined && value !== null) {
       
       const option = options.find(option => option.index === value)
@@ -79,6 +82,8 @@ class SliderComponent extends React.Component {
 
     color = this._getColor(this.props.value, this.props.dimension.thresholds);
     const sliderValue = this.props.value !== false ? this.props.value : 0
+
+    const disabled = this.props.dimension.options && this.props.dimension.options.length < 2
 
     return (
       <TouchableHighlight 
@@ -106,6 +111,7 @@ class SliderComponent extends React.Component {
               step={1}
               thumbTintColor={color}
               minimumTrackTintColor={color}
+              disabled={disabled}
             />
 
           </View>

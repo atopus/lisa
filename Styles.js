@@ -92,5 +92,8 @@ export default StyleSheet.create({
   separator : {
     backgroundColor: '#eee',
     height: 1
+  },
+  buttonIcon : {
+    padding: 5 // Use padding to enlarge touchable area.
   }
 });
