@@ -18,7 +18,7 @@ import {
 
 const mapStateToProps = (state, props) => {
   const uid = props.navigation.state.params.dimensionId
-  const dimension = uid ? getDimension(state, uid) : null 
+  const dimension = uid ? getDimension(state, uid) : null
   if(dimension) {
     dimension.options = dimension ? Object.keys(dimension.options).map(key => ({
       key,
@@ -39,7 +39,7 @@ const mapDispatchToProps = {
   removeDimension
 }
 
-class Dimension extends React.Component {
+class Dimension extends React.PureComponent {
 
   constructor(props) {
     super(props)
@@ -59,7 +59,7 @@ class Dimension extends React.Component {
   })
 
 
-  _onSubmit() {
+  _onSubmit = () => {
 
     if(this.state.isNew) {
       const uid = this.props.createDimension(this.state.label)
@@ -69,6 +69,36 @@ class Dimension extends React.Component {
     }
 
     this.setState({ edit: false, isNew : false })
+  }
+
+  _onCancel = () => {
+    this.setState({ edit: false })
+  }
+
+  _edit = () => {
+    this.setState({ edit: true })
+  }
+
+  _onCreateOption = () => {
+    this.setState({ newOption : true })
+  }
+
+  _onDeleteConfirm = () => {
+    Alert.alert(
+      'Are you sure ?', 
+      '', 
+      [{
+          'text' : "Yes !", 
+          onPress : () => {
+          this.props.removeDimension(this.props.uid)
+          this.props.navigation.navigate('Home')
+          }
+        }, {
+          'text' : 'Nope'
+        }
+      ],
+      { cancelable: true }  
+    ) 
   }
 
   _renderHeader() {
@@ -89,7 +119,7 @@ class Dimension extends React.Component {
             size={20}
             name='check'
             color={ StyleVariables.success } 
-            onPress={() => this.state.label && this._onSubmit()}
+            onPress={this._onSubmit}
             disabled={!this.state.label || !this.state.label.trim()} 
           />
           {!this.state.isNew && (
@@ -98,14 +128,14 @@ class Dimension extends React.Component {
               size={20}
               name='ban'
               color={ StyleVariables.warning }
-              onPress={() => this.setState({ edit: false })}
+              onPress={this._onCancel}
             />
           )}
         </View>
       </View>
     ) : (
       <TouchableWithoutFeedback
-        onPress={() => this.setState({ edit: true })}
+        onPress={this._edit}
       >
         <View style={ Styles.header }>
           <Text style={ Styles.h1 }>{this.state.label}</Text>
@@ -153,7 +183,7 @@ class Dimension extends React.Component {
               <FAIcon.Button
                 name='plus'
                 backgroundColor={ StyleVariables.primary } 
-                onPress={() => this.setState({ newOption : true })}>
+                onPress={this._onCreateOption}>
                   Create option
                 </FAIcon.Button>
             </View>
@@ -167,22 +197,6 @@ class Dimension extends React.Component {
   render() {
 
     const canDelete = !this.props.new
-
-    const deleteConfirmation = () => Alert.alert(
-      'Are you sure ?', 
-      '', 
-      [{
-          'text' : "Yes !", 
-          onPress : () => {
-          this.props.removeDimension(this.props.uid)
-          this.props.navigation.navigate('Home')
-          }
-        }, {
-          'text' : 'Nope'
-        }
-      ],
-      { cancelable: true }  
-    )
 
     return (
       <KeyboardAvoidingView 
@@ -200,7 +214,7 @@ class Dimension extends React.Component {
               style={{ width: '50%'}} 
               name='trash'
               backgroundColor={StyleVariables.danger}
-              onPress={() => deleteConfirmation() }        
+              onPress={this._onDeleteConfirm}        
             >
               Delete dimension
             </FAIcon.Button>

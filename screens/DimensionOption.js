@@ -29,7 +29,7 @@ const mapDispatchToProps = ({
   editOption
 });
 
-class DimensionOption extends React.Component {
+class DimensionOption extends React.PureComponent {
 
   constructor(props) {
     super(props)
@@ -41,7 +41,7 @@ class DimensionOption extends React.Component {
     }
   }
 
-  _onSubmit() {
+  _onSubmit = () => {
 
     if(this.state.new) {
       this.props.createOption(
@@ -60,7 +60,11 @@ class DimensionOption extends React.Component {
     }
   }
 
-  _onDelete() {
+  _editOption = () => {
+    this.props.editOption(this.props.dimensionId, this.props.index, false)
+  }
+
+  _onDelete = () => {
     this.props.deleteOption(this.props.dimensionId, this.props.index)
   }
 
@@ -89,7 +93,7 @@ class DimensionOption extends React.Component {
             size={16}
             name="check"
             color={StyleVariables.success}
-            onPress={() => this._onSubmit()}
+            onPress={this._onSubmit}
             disabled={!this.state.text || !this.state.text.trim()} 
           />
           <FAIcon
@@ -97,7 +101,7 @@ class DimensionOption extends React.Component {
             size={16}
             name="ban"
             color={StyleVariables.warning}
-            onPress={() => this.props.editOption(this.props.dimensionId, this.props.index, false)}
+            onPress={this._editOption}
           />
         </View>
       </View>
@@ -105,9 +109,8 @@ class DimensionOption extends React.Component {
 
       // Label
       
-      <TouchableWithoutFeedback
-        onPress={() => this.props.editOption(this.props.dimensionId, this.props.index, true)}
-      >
+      <TouchableWithoutFeedback onPress={this._editOption} >
+
         <View style={ styles.textWrapper }>
         
           <Text style={[ Styles.p , { width: canDelete ? '90%'  : '100%' } ]}>
@@ -120,7 +123,7 @@ class DimensionOption extends React.Component {
                 name='trash'
                 style={ Styles.p }
                 size={10}
-                onPress={() => this._onDelete()}
+                onPress={this._onDelete}
               />
             </View>
           )}

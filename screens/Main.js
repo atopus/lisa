@@ -31,7 +31,7 @@ const mapDispatchToProps = {
   setDate : setDate
 };
 
-class Main extends React.Component {
+class Main extends React.PureComponent {
 
   static navigationOptions = {
     title: 'Liska',
@@ -41,18 +41,22 @@ class Main extends React.Component {
     headerTintColor : '#fff',
   };
 
-  _resetDate() {
+  _resetDate = () => {
     this.setState({ date : moment().format('YYYYMMDD') });
   }
 
-  _previousDate() {
+  _previousDate = () => {
     const newDate = moment(this.props.date, 'YYYYMMDD').subtract(1, 'days');
     this.props.setDate(newDate.format('YYYYMMDD'));
   }
 
-  _nextDate() {
+  _nextDate = () => {
     const newDate = moment(this.props.date, 'YYYYMMDD').add(1, 'days');
     this.props.setDate(newDate.format('YYYYMMDD'));
+  }
+
+  _createDimension = () => {
+    this.props.navigation.navigate('Dimension', { new: true })
   }
 
   _renderHeader() {
@@ -62,7 +66,7 @@ class Main extends React.Component {
           style={ Styles.buttonIcon } 
           color={StyleVariables.lightgrey}
           name="chevron-left"
-          onPress={() => this._previousDate()}
+          onPress={this._previousDate}
         />
         
         <Text style={ Styles.h1 }>
@@ -73,7 +77,7 @@ class Main extends React.Component {
           style={ Styles.buttonIcon }
           color={StyleVariables.lightgrey}
           name="chevron-right"
-          onPress={() => this._nextDate()}
+          onPress={this._nextDate}
         />
       </View>
     )
@@ -99,9 +103,7 @@ class Main extends React.Component {
             <FAIcon.Button
               name='plus'
               backgroundColor={StyleVariables.primary}
-              onPress={() => this.props.navigation.navigate('Dimension', {
-                new: true
-              })}>
+              onPress={this._createDimension}>
                 Create dimension
               </FAIcon.Button>
           </View>
