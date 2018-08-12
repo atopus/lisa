@@ -32,7 +32,7 @@ const RootStack = createStackNavigator({
   Dimension: Dimension
 })
 
-export default class App extends React.Component {
+export default class App extends React.PureComponent {
 
   render() {
     return (

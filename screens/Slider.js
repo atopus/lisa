@@ -28,7 +28,7 @@ const mapDispatchToProps = {
   setValue: saveValue
 }
 
-class SliderComponent extends React.Component {
+class SliderComponent extends React.PureComponent {
 
   _onValueChange(value) {
     return this.props.setValue(this.props.dimension.uid, this.props.date, value)
@@ -73,6 +73,12 @@ class SliderComponent extends React.Component {
     } else return '--'
   }
 
+  _navigateToDimension = () => {
+    this.props.navigation.navigate('Dimension', {
+      dimensionId: this.props.dimension.uid
+    })
+  }
+
   render() {
 
     const indices = this.props.dimension.options.map(option => option.index)
@@ -87,9 +93,7 @@ class SliderComponent extends React.Component {
 
     return (
       <TouchableHighlight 
-        onPress={() => this.props.navigation.navigate('Dimension', {
-          dimensionId: this.props.dimension.uid
-        })}
+        onPress={this._navigateToDimension}
         underlayColor={StyleVariables.COMPLEMENT2.lighter}
       >
         <View style={[ Styles.item, { borderLeftColor: color } ]}>
