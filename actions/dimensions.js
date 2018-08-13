@@ -44,12 +44,9 @@ export const createDimension = label => dispatch => {
   return uid
 }
 
-export const updateDimension = (uid, label) => ({
+export const updateDimension = dimension => ({
   type: UPDATE_DIMENSION,
-  payload : {
-    uid,
-    label
-  }
+  payload : dimension
 })
 
 export const removeDimension = uid => ({

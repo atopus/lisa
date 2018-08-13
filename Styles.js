@@ -85,6 +85,9 @@ export default StyleSheet.create({
   h2 : {
     fontSize: 24
   },
+  h3 : {
+    fontSize: 18
+  },
   p : {
     color: grey,
     fontSize: 16

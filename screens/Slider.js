@@ -1,8 +1,9 @@
-import React from 'react';
+import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux';
-import { Text, View, Slider, TouchableHighlight, Alert } from 'react-native';
-import Styles, * as StyleVariables from '../Styles';
+import { connect } from 'react-redux'
+import { Text, View, Slider, TouchableHighlight, Alert } from 'react-native'
+import Styles, * as StyleVariables from '../Styles'
+import * as Dimension from '../models/Dimension'
 
 import {
   getDate,
@@ -73,6 +74,10 @@ class SliderComponent extends React.PureComponent {
     } else return '--'
   }
 
+  _getNumericLabel(value, unit) {
+    return `${value} ${unit}`
+  }
+
   _navigateToDimension = () => {
     this.props.navigation.navigate('Dimension', {
       dimensionId: this.props.dimension.uid
@@ -81,15 +86,39 @@ class SliderComponent extends React.PureComponent {
 
   render() {
 
-    const indices = this.props.dimension.options.map(option => option.index)
-    const min = Math.min.apply(0, indices)
-    const max = Math.max.apply(0, indices)
-    const valueLabel = this._getOptionLabel(this.props.value, this.props.dimension.options)
+    const d = this.props.dimension
+    const value = this.props.value
 
-    color = this._getColor(this.props.value, this.props.dimension.thresholds);
-    const sliderValue = this.props.value !== false ? this.props.value : 0
+    // set min, max, valueLabel, sliderValue according to variable type
+    let min = 0 
+    let max = 0
+    let valueLabel = 'No label applicable'
 
-    const disabled = this.props.dimension.options && this.props.dimension.options.length < 2
+    // unQualified
+    if(!Dimension.isUnqualified(d)) {
+      if(Dimension.isRanking(d)){
+
+        const indices = d.options.map(option => option.index)
+        min = Math.min.apply(0, indices)
+        max = Math.max.apply(0, indices)
+        valueLabel = this._getOptionLabel(value, d.options)
+
+      } else if(Dimension.isNumeric(d)) {
+
+        min = d.min
+        max = d.max
+        valueLabel = this._getNumericLabel(value, d.unit)
+        
+      } else {
+        throw new Error("unknown dimension type "+d.label)
+      }
+    }
+
+    const color = this._getColor(value, d.thresholds);
+    const sliderValue = value !== false ? value : 0
+    const label = (value !== false && value !== undefined && value !== null) ? valueLabel : '\u2754'
+
+    const disabled = !Dimension.isEnabled(d)
 
     return (
       <TouchableHighlight 
@@ -98,11 +127,11 @@ class SliderComponent extends React.PureComponent {
       >
         <View style={[ Styles.item, { borderLeftColor: color } ]}>
           <View style={{ flex: 1, }}>
-            <Text style={ Styles.h2 }>{this.props.dimension.label} :</Text>
+            <Text style={ Styles.h2 }>{d.label} :</Text>
           </View>
           <View style={{ flex: 2 }}>
             <Text style={ [ Styles.p, { minHeight: 35 }] }>
-              {valueLabel}
+              {label}
             </Text>
           </View>
           <View style={{ flex: 1 }}>

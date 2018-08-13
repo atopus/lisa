@@ -113,22 +113,26 @@ const thresholds = (state = [], action) => {
 
 const dimension = (state = {}, action) => {
 
-  const { uid, label } = action.payload
+  const { uid, label, max, min, step, unit } = action.payload
   switch(action.type) {
 
     case ADD_DIMENSION:
       if(!uid || !label) throw new Error("Missing argument.")
-      return { 
-        uid, 
-        label, 
-        options : options(undefined, action), 
-        values : values(undefined, action)
+      return {
+        uid,
+        label,
+        options : options(undefined, action),
+        values : value(undefined, action),
+        max: null,
+        min: null,
+        unit: '',
+        step: 1
       }
     
     case UPDATE_DIMENSION:
       if(!uid || !label) throw new Error("Missing argument.")
       if(uid !== state.uid) return state
-      return { ...state, label }
+      return { ...state, label, max, min, step, unit }
 
     case SET_VALUE :
     case REMOVE_VALUE:
