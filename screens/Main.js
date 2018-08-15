@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
-import { Text, View, ScrollView, FlatList, Button } from 'react-native';
+import { Text, View, ScrollView, FlatList, TouchableNativeFeedback } from 'react-native';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 import SliderComponent from './Slider';
@@ -62,23 +62,32 @@ class Main extends React.PureComponent {
   _renderHeader() {
     return (
       <View style={Styles.header}>
-        <FAIcon size={20}
-          style={ Styles.buttonIcon } 
-          color={StyleVariables.lightgrey}
-          name="chevron-left"
+        <TouchableNativeFeedback
           onPress={this._previousDate}
-        />
+          hitSlop={{top: 10, bottom: 10, left: 20, right: 0}} 
+        >
+          <FAIcon size={20}
+            style={ Styles.buttonIcon } 
+            color={StyleVariables.lightgrey}
+            name="chevron-left"
+          />
+        </TouchableNativeFeedback>
         
         <Text style={ Styles.h1 }>
           {moment(this.props.date, 'YYYYMMDD').format('Do MMMM YYYY')}
         </Text>
       
-        <FAIcon size={20}
-          style={ Styles.buttonIcon }
-          color={StyleVariables.lightgrey}
-          name="chevron-right"
-          onPress={this._nextDate}
-        />
+      <TouchableNativeFeedback
+        onPress={this._nextDate}
+        hitSlop={{top: 10, bottom: 10, left: 0, right: 20}} 
+        >
+          <FAIcon size={20}
+            style={ Styles.buttonIcon }
+            color={StyleVariables.lightgrey}
+            name="chevron-right"
+            onPress={this._nextDate}
+          />
+        </TouchableNativeFeedback>
       </View>
     )
   }

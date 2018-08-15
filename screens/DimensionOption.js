@@ -87,9 +87,8 @@ class DimensionOption extends React.PureComponent {
             style={ Styles.textInput }
             multiline={true}
             numberOfLines={4}
-          >
-            {this.state.text}
-          </TextInput>
+            value={this.state.text}
+          />
         </View>
         <View style={{ width: '20%', flexDirection: 'row', justifyContent: 'space-around'}}>
           <FAIcon
