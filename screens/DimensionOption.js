@@ -68,6 +68,10 @@ class DimensionOption extends React.PureComponent {
     this.props.deleteOption(this.props.dimensionId, this.props.index)
   }
 
+  _onChange = (text) => {
+    this.setState({ text })
+  }
+
   _renderText() {
 
     const canDelete = this.props.frequency === 0
@@ -79,7 +83,7 @@ class DimensionOption extends React.PureComponent {
         <View style={{ width: '80%'}}>
           <TextInput
             underlineColorAndroid={StyleVariables.lightgrey}
-            onChangeText={text => this.setState({ text })}
+            onChangeText={this._onChange}
             style={ Styles.textInput }
             multiline={true}
             numberOfLines={4}
