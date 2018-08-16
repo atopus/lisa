@@ -1,42 +1,35 @@
 import { combineReducers } from 'redux'
 import {
-  CREATE_VALUE,
-  UPDATE_VALUE,
-  DELETE_VALUE 
+  SET_VALUE,
+  REMOVE_VALUE
 } from '../constants'
 
-const byDateId = (state = {}, action) => {
-
-  const value = action.payload
+const byDimDate = (state = {}, action) => {
 
   switch(action.type) {
 
-    case CREATE_VALUE:
+    case SET_VALUE:
+
+      const dimension = action.payload
+      if(!dimension) throw new Error("Missing dimension")
+      if(!dimension.uid) throw new Error("Missing dimension id")
+      if(!dimension.value) throw new Error("Missing value")
+      const value = dimension.value
       return {
         ...state,
-        [value.uid] : value
+        [dimension.uid] : {
+          ...state[dimension.uid],
+          ...value
+        } 
       }
 
-    case UPDATE_VALUE:
-      return {
-        ...state,
-        [value.uid] : value
-      }
-    default:
-      return state
-  }
-}
-
-const allIds = (state = [], action) => {
-  switch(action.type) {
-    case CREATE_VALUE:
-      return [
-        ...state,
-        action.payload.uid
-      ]
-
-    case DELETE_VALUE:
-      return state.filter(uid => uid !== action.payload.uid )
+    case REMOVE_VALUE:
+      const dim = action.payload
+      const val = dim.value
+      const newState = { ...state }
+      const key = Object.keys(val)[0]
+      delete newState[dim.uid][key]
+      return newState
 
     default:
       return state
@@ -44,9 +37,8 @@ const allIds = (state = [], action) => {
 }
 
 export default combineReducers({
-  byDateId,
-  allIds
+  byDimDate,
 })
 
-export const getValue = (state, uid) => state.byId[uid]
-export const getValues = state => state.allIds.map(id => state.byId[id])
+export const getValue = (state, dimensionId, date) => state.byDimDate[dimensionId][date]
+export const getValues = (state, dimensionId) => state.byDimDate[dimensionId]

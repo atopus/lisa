@@ -1,42 +1,52 @@
 import { combineReducers } from 'redux'
 import {
-  CREATE_OPTION,
-  UPDATE_OPTION,
-  DELETE_OPTION 
+  SET_OPTION,
+  DELETE_OPTION,
+  EDIT_OPTION
 } from '../constants'
 
 const byDimIdx = (state = {}, action) => {
 
-  const option = action.payload
+  const dimension = action.payload
 
   switch(action.type) {
 
-    case CREATE_OPTION:
+    case SET_OPTION:
+
+      const o = dimension.option
       return {
         ...state,
-        [option.uid] : option
+        [dimension.uid] : {
+          ...state[dimension.uid],
+          [o.index] : o.text
+        }
       }
 
-    case UPDATE_OPTION:
-      return {
-        ...state,
-        [option.uid] : option
-      }
+    case DELETE_OPTION:
+      const opt = dimension.option
+
+      const newState = state[dimension.uid]
+      delete newState[opt.index]
+      return newState
+
     default:
       return state
   }
 }
 
-const allIds = (state = [], action) => {
-  switch(action.type) {
-    case CREATE_OPTION:
-      return [
-        ...state,
-        action.payload.uid
-      ]
+const editInit = { dimensionId : null, index: null }
 
-    case DELETE_OPTION:
-      return state.filter(uid => uid !== action.payload.uid )
+const edit = (state = editInit, action) => {
+  switch(action.type) {
+    case EDIT_OPTION :
+      const { uid, option } = action.payload 
+      return (
+        state.dimensionId === uid &&
+        state.index === option.index
+      ) ? editInit : {
+        dimensionId: uid,
+        index: option.index
+      } 
 
     default:
       return state
@@ -45,8 +55,8 @@ const allIds = (state = [], action) => {
 
 export default combineReducers({
   byDimIdx,
-  allIds
+  edit
 })
 
-export const getOption = (state, uid) => state.byId[uid]
-export const getOptions = state => state.allIds.map(id => state.byId[id])
+export const getOption = (state, dimensionId, index) => state.byId[dimensionId][index]
+export const getOptions = state => state.byId[dimensionId]

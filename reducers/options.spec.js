@@ -1,13 +1,13 @@
-import * as fromReducer from './dimensions'
+import reducer from './options'
 import * as actions from '../constants'
 
 describe('reducer', () => {
   describe('handle dimension options', () => {
 
-    const dimension = {
-      uid: '1',
-      label: 'Label of a tested dimension'
-    }
+    // const dimension = {
+    //   uid: '1',
+    //   label: 'Label of a tested dimension'
+    // }
     const option1 = {
       index: 1,
       text : "This is my very first option."
@@ -18,20 +18,22 @@ describe('reducer', () => {
     }
 
     it('should handle ADD_DIMENSION_OPTION for a first option', () => {
-      const state = [dimension]
+      const state = {}
       const action = {
-        type: actions.ADD_DIMENSION_OPTION,
+        type: actions.SET_OPTION,
         payload : {
           uid: '1',
           option : option1
         }
       }
-      expect(fromReducer.dimensions(state, action))
-        .toMatchObject([{ ...dimension, options: [option1] }])
+
+      const result = reducer(state, action)
+      expect(result.byDimIdx)
+        .toMatchObject({ '1' : { [option1.index] : option1.text }})
     })
 
     it('should handle ADD_DIMENSION_OPTION for a second option', () => {
-      const state = [{ ...dimension, options: [option1]}]
+      const state = { '1' : { [option1] : option1 } }
       const action = {
         type: actions.ADD_DIMENSION_OPTION,
         payload : {
@@ -39,31 +41,37 @@ describe('reducer', () => {
           option : option2
         }
       }
-      expect(fromReducer.dimensions(state, action))
-        .toMatchObject([{...dimension, options: [option1, option2]}])
+      const result = reducer(state, action)
+      expect(result.byDimIdx)
+        .toMatchObject({ '1' : {
+          [option1.index]: option1.text,
+          [option2.index]: option2.text
+        }})
     })
 
     it('should handle UPDATE_DIMENSION_OPTION', () => {
-      const state = [{ ...dimension, options: [option1] }]
+      const state = { '1' : { [option1] : option1 }  }
       const updated = {
         index: 1,
         text: "Updated option text"
       }
       const action = {
-        type: actions.UPDATE_DIMENSION_OPTION,
+        type: actions.SET_OPTION,
         payload: {
           uid: '1',
           option: updated
         }
       }
-      expect(fromReducer.dimensions(state, action))
-        .toEqual([{ ...dimension, options: [updated ]}])
+
+      const result = reducer(state, action)
+      expect(result.byDimIdx)
+        .toMatchObject({ '1' : { [option1.index]: updated.text } })
     })
 
     it('should handle REMOVE_DIMENSION_OPTION', () => {
-      const state = [{ ...dimension, options: [option1] }]
+      const state = { '1' : { [option1] : option1 }  }
       const action = {
-        type: actions.REMOVE_DIMENSION_OPTION,
+        type: actions.DELETE_OPTION,
         payload: {
           uid: '1',
           option : {
@@ -71,14 +79,16 @@ describe('reducer', () => {
           }
         }
       }
-      expect(fromReducer.dimensions(state, action))
-        .toEqual([{ ...dimension, options : [] }])
+
+      const result = reducer(state, action)
+      expect(result.byDimIdx)
+        .toMatchObject({ '1' : {}})
     })
 
     it('should handle EDIT_DIMENSION_OPTION', () => {
-      const state = [{ ...dimension, options : [option1, option2]}]
+      const state = {dimensionId : null, index: null }
       const action = {
-        type: actions.EDIT_DIMENSION_OPTION,
+        type: actions.EDIT_OPTION,
         payload: {
           uid: '1',
           option :{
@@ -87,9 +97,11 @@ describe('reducer', () => {
           }
         }
       }
-      const option2edited = { ...option2, edit: true }
-      expect(fromReducer.dimensions(state, action))
-        .toEqual([{ ...dimension, options : [option1, option2edited ]}])
+      const result = reducer(state, action)
+      expect(result.edit)
+        .toMatchObject({
+          dimensionId : '1', index: 2 
+        })
     })
   })
 })

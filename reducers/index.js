@@ -5,6 +5,8 @@ import {
   APP_LOADING,
 } from '../constants'
 import dimensions, * as fromDimensions from './dimensions'
+import values, * as fromValues from './values'
+import options, * as fromOptions from './options'
 
 import moment from 'moment/min/moment-with-locales'
 moment.locale('fr')
@@ -60,7 +62,7 @@ export const getDimension = (state, uid) =>
   fromDimensions.getDimension(state.dimensions, uid)
 
 export const getValues = (state, uid) => 
-  fromDimensions.getValues(state.dimensions, uid)
+  fromValues.getValues(state.values, uid)
 
 export const getValuesMap = (state, uid) => {
   const valuesObject = getValues(state, uid)
@@ -71,13 +73,13 @@ export const getValuesMap = (state, uid) => {
 }
 
 export const getValue = (state, uid, date) => 
-  fromDimensions.getValue(state.dimensions, uid, date)
+  fromValues.getValue(state.values, uid, date)
 
 export const getOptions = (state, uid) => 
-  fromDimensions.getOptions(state.dimensions, uid)
+  fromOptions.getOptions(state.options, uid)
 
 export const getOption = (state, uid, index) =>
-  fromDimensions.getOption(state.dimensions, uid, index)
+  fromOption.getOption(state.options, uid, index)
 
 export const getOptionFrequency = (state, dimensionId, value) => {
   const values = getValuesMap(state, dimensionId)
