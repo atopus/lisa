@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Text, View, Slider, TouchableHighlight, Alert } from 'react-native'
+import { Text, View, Slider, TouchableHighlight, Alert, Animated, Platform, Easing } from 'react-native'
 import Styles, * as StyleVariables from '../Styles'
 import * as Dimension from '../models/Dimension'
 
@@ -30,6 +30,52 @@ const mapDispatchToProps = {
 }
 
 class SliderComponent extends React.PureComponent {
+
+  constructor(props) {
+    super(props)
+
+    this._active = new Animated.Value(0);
+
+    this._style = {
+      ...Platform.select({
+        ios: {
+          transform: [{
+            scale: this._active.interpolate({
+              inputRange: [0, 1],
+              outputRange: [1, 1.02],
+            }),
+          }],
+          shadowRadius: this._active.interpolate({
+            inputRange: [0, 1],
+            outputRange: [2, 10],
+          }),
+        },
+
+        android: {
+          transform: [{
+            scale: this._active.interpolate({
+              inputRange: [0, 1],
+              outputRange: [1, 1.01],
+            }),
+          }],
+          elevation: this._active.interpolate({
+            inputRange: [0, 1],
+            outputRange: [2, 6],
+          }),
+        },
+      })
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.active !== nextProps.active) {
+      Animated.timing(this._active, {
+        duration: 300,
+        easing: Easing.bounce,
+        toValue: Number(nextProps.active),
+      }).start();
+    }
+  }
 
   _onValueChange(value) {
     return this.props.setValue(this.props.dimension.uid, this.props.date, value)
@@ -78,12 +124,6 @@ class SliderComponent extends React.PureComponent {
     return `${value} ${unit}`
   }
 
-  _navigateToDimension = () => {
-    this.props.navigation.navigate('Dimension', {
-      dimensionId: this.props.dimension.uid
-    })
-  }
-
   render() {
 
     const d = this.props.dimension
@@ -121,35 +161,33 @@ class SliderComponent extends React.PureComponent {
     const disabled = !Dimension.isEnabled(d)
 
     return (
-      <TouchableHighlight 
-        onPress={this._navigateToDimension}
-        underlayColor={StyleVariables.COMPLEMENT2.lighter}
-      >
-        <View style={[ Styles.item, { borderLeftColor: color } ]}>
-          <View style={{ flex: 1, }}>
-            <Text style={ Styles.h2 }>{d.label} :</Text>
-          </View>
-          <View style={{ flex: 2 }}>
-            <Text style={ [ Styles.p, { minHeight: 35 }] }>
-              {label}
-            </Text>
-          </View>
-          <View style={{ flex: 1 }}>
-          
-            <Slider  
-              minimumValue={min} 
-              maximumValue={max} 
-              value={sliderValue} 
-              onValueChange={value => this._onValueChange(value)} 
-              step={1}
-              thumbTintColor={color}
-              minimumTrackTintColor={color}
-              disabled={disabled}
-            />
-
-          </View>
+      <Animated.View style={[ 
+        Styles.item, Styles.row, this._style,
+        { borderLeftColor: color }
+      ]}>
+        <View style={{ flex: 1, }}>
+          <Text style={ Styles.h2 }>{d.label} :</Text>
         </View>
-      </TouchableHighlight>
+        <View style={{ flex: 2 }}>
+          <Text style={ [ Styles.p, { minHeight: 35 }] }>
+            {label}
+          </Text>
+        </View>
+        <View style={{ flex: 1 }}>
+        
+          <Slider  
+            minimumValue={min} 
+            maximumValue={max} 
+            value={sliderValue} 
+            onValueChange={value => this._onValueChange(value)} 
+            step={1}
+            thumbTintColor={color}
+            minimumTrackTintColor={color}
+            disabled={disabled}
+          />
+
+        </View>
+      </Animated.View>
     )
   }
 }

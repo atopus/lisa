@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
-import { Text, View, ScrollView, FlatList, TouchableNativeFeedback } from 'react-native';
-import FAIcon from 'react-native-vector-icons/FontAwesome';
+import { Text, View, TouchableNativeFeedback, Easing, Dimensions } from 'react-native';
+import FAIcon from 'react-native-vector-icons/FontAwesome'
+import SortableList from 'react-native-sortable-list'
+
+const window = Dimensions.get('window');
 
 import SliderComponent from './Slider';
 import Styles, * as StyleVariables from '../Styles';
@@ -92,31 +95,39 @@ class Main extends React.PureComponent {
     )
   }
 
+  _renderRow = ({ key, data, active }) => (
+    <SliderComponent
+      uid={data.uid}
+      key={key}
+      date={this.props.date}
+      navigation={this.props.navigation}
+      active={active}
+    />
+  )
+
+  _navToDim = key => {    
+    this.props.navigation.navigate('Dimension', {
+      dimensionId: key 
+    })
+  }
+
   _renderList() {
     return (
       <View style={Styles.list}>
-        <ScrollView>
-          <FlatList 
-            ItemSeparatorComponent={({highlighted}) => (
-                <View style={Styles.separator} />
-            )}
-            data={this.props.dimensions}
-            renderItem={({item}) => (
-                <SliderComponent
-                  uid={item.uid}
-                  date={this.props.date}
-                  navigation={this.props.navigation}
-              />) 
-          }/>
-          <View style={{ alignItems : 'center', paddingBottom: 5 }}>
-            <FAIcon.Button
-              name='plus'
-              backgroundColor={StyleVariables.primary}
-              onPress={this._createDimension}>
-                Create dimension
-              </FAIcon.Button>
-          </View>
-        </ScrollView>
+        <SortableList
+          contentContainerStyle={Styles.contentContainer}
+          data={this.props.dimensions}
+          renderRow={this._renderRow}
+          onPressRow={this._navToDim}
+        />
+        <View style={{ alignItems : 'center', paddingBottom: 5 }}>
+          <FAIcon.Button
+            name='plus'
+            backgroundColor={StyleVariables.primary}
+            onPress={this._createDimension}>
+              Create dimension
+            </FAIcon.Button>
+        </View>
       </View>
     )
   }

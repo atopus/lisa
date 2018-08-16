@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 // Color scheme
 // http://paletton.com/#uid=50B0u0kp5F+eGQPkjL1uKBG-5rp
@@ -45,6 +45,52 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        paddingTop: 20,
+      },
+    }),
+  },
+  contentContainer: {
+    width: window.width,
+
+    ...Platform.select({
+      ios: {
+        paddingHorizontal: 30,
+      },
+
+      android: {
+        paddingHorizontal: 0,
+      }
+    })
+  },
+
+  row: {
+    flex: 1,
+    marginTop: 7,
+    marginBottom: 7,
+    borderRadius: 4,
+    borderLeftWidth : 6,
+    paddingLeft: 10,
+    paddingBottom: 3,
+    paddingHorizontal: 3,
+    backgroundColor: 'white',
+
+    ...Platform.select({
+      ios: {
+        width: window.width - 5 * 2,
+        shadowColor: 'rgba(0,0,0,0.2)',
+        shadowOpacity: 1,
+        shadowOffset: {height: 2, width: 2},
+        shadowRadius: 2,
+      },
+
+      android: {
+        width: window.width - 5 * 2,
+        elevation: 0,
+        marginHorizontal: 5,
+      },
+    })
   },
   slider: {
     flex: 1,
@@ -55,11 +101,6 @@ export default StyleSheet.create({
   },
   list: {
     flex: 5
-  },
-  item : {
-    borderLeftWidth : 6,
-    paddingBottom: 10,
-    paddingHorizontal: 10
   },
   header: {
     flex: 1,
