@@ -1,13 +1,13 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from 'redux'
 import {
   LOAD_VALUES,
   SET_DATE,
   APP_LOADING,
-} from '../constants/actions';
+} from '../constants'
 import dimensions, * as fromDimensions from './dimensions'
 
-import moment from 'moment/min/moment-with-locales';
-moment.locale('fr');
+import moment from 'moment/min/moment-with-locales'
+moment.locale('fr')
 
 const initialApp = {
   loading : false,

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Text, View, Slider, TouchableHighlight, Alert, Animated, Platform, Easing } from 'react-native'
+import { Text, View, Slider, Alert, Animated, Platform, Easing } from 'react-native'
 import Styles, * as StyleVariables from '../Styles'
 import * as Dimension from '../models/Dimension'
 

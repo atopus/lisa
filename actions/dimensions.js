@@ -1,17 +1,17 @@
 import uuidv1 from 'uuid/v1'
 import {
-  ADD_DIMENSION,
+  CREATE_DIMENSION,
   UPDATE_DIMENSION,
   SET_VALUE,
-  ADD_DIMENSION_OPTION,
-  UPDATE_DIMENSION_OPTION,
-  REMOVE_DIMENSION_OPTION,
-  EDIT_DIMENSION_OPTION,
-  REMOVE_DIMENSION
-} from '../constants/actions';
+  CREATE_OPTION,
+  UPDATE_OPTION,
+  DELETE_OPTION,
+  EDIT_OPTION,
+  DELETE_DIMENSION
+} from '../constants';
 
 export const editOption = (uid, index, edit) => ({
-  type: EDIT_DIMENSION_OPTION,
+  type: EDIT_OPTION,
   payload : {
     uid,
     option : {
@@ -34,7 +34,7 @@ export const createDimension = label => dispatch => {
   const uid = uuidv1()
   
   dispatch({
-    type: ADD_DIMENSION,
+    type: CREATE_DIMENSION,
     payload: {
       uid,
       label
@@ -50,14 +50,14 @@ export const updateDimension = dimension => ({
 })
 
 export const removeDimension = uid => ({
-  type: REMOVE_DIMENSION,
+  type: DELETE_DIMENSION,
   payload : {
     uid
   }
 })
 
 export const createOption = (dimensionId, index, text) => ({
-  type: ADD_DIMENSION_OPTION,
+  type: CREATE_OPTION,
   payload: { 
     uid : dimensionId, 
     option : { index, text }
@@ -65,7 +65,7 @@ export const createOption = (dimensionId, index, text) => ({
 })
 
 export const updateOption = (dimensionId, index, text) => ({
-  type: UPDATE_DIMENSION_OPTION,
+  type: UPDATE_OPTION,
   payload: { 
     uid : dimensionId, 
     option : { index, text }
@@ -73,7 +73,7 @@ export const updateOption = (dimensionId, index, text) => ({
 })
 
 export const deleteOption = (dimensionId, index) => ({
-  type: REMOVE_DIMENSION_OPTION,
+  type: DELETE_OPTION,
   payload: {
     uid: dimensionId,
     option : {

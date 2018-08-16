@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
-import { Text, View, TouchableNativeFeedback, Easing, Dimensions } from 'react-native';
+import { Text, View, TouchableNativeFeedback, Dimensions } from 'react-native';
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import SortableList from 'react-native-sortable-list'
 

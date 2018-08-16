@@ -1,6 +1,6 @@
 import {
   SET_DATE
-} from '../constants/actions';
+} from '../constants';
 
 export const setDate = date => ({
   type: SET_DATE,

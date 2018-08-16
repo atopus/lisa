@@ -2,7 +2,7 @@ import {
   APP_LOADING,
   SET_NETWORKING,
   SET_STORAGE_AVAILABLE
-} from '../constants/actions';
+} from '../constants';
 
 export const appLoading = loading => ({
   type: APP_LOADING,

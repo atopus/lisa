@@ -1,26 +1,26 @@
 import { combineReducers } from 'redux'
 import {
-  CREATE_DIMENSION,
-  UPDATE_DIMENSION,
-  DELETE_DIMENSION
+  CREATE_OPTION,
+  UPDATE_OPTION,
+  DELETE_OPTION 
 } from '../constants'
 
-const byId = (state = {}, action) => {
+const byDimIdx = (state = {}, action) => {
 
-  const dimension = action.payload
+  const option = action.payload
 
   switch(action.type) {
 
-    case CREATE_DIMENSION:
+    case CREATE_OPTION:
       return {
         ...state,
-        [dimension.uid] : dimension
+        [option.uid] : option
       }
 
-    case UPDATE_DIMENSION:
+    case UPDATE_OPTION:
       return {
         ...state,
-        [dimension.uid] : dimension
+        [option.uid] : option
       }
     default:
       return state
@@ -28,15 +28,14 @@ const byId = (state = {}, action) => {
 }
 
 const allIds = (state = [], action) => {
-
   switch(action.type) {
-    case CREATE_DIMENSION:
+    case CREATE_OPTION:
       return [
         ...state,
         action.payload.uid
       ]
 
-    case DELETE_DIMENSION:
+    case DELETE_OPTION:
       return state.filter(uid => uid !== action.payload.uid )
 
     default:
@@ -45,9 +44,9 @@ const allIds = (state = [], action) => {
 }
 
 export default combineReducers({
-  byId,
+  byDimIdx,
   allIds
 })
 
-export const getDimension = (state, uid) => state.byId[uid]
-export const getDimensions = state => state.allIds.map(id => state.byId[id])
+export const getOption = (state, uid) => state.byId[uid]
+export const getOptions = state => state.allIds.map(id => state.byId[id])

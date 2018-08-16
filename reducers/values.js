@@ -1,26 +1,26 @@
 import { combineReducers } from 'redux'
 import {
-  CREATE_DIMENSION,
-  UPDATE_DIMENSION,
-  DELETE_DIMENSION
+  CREATE_VALUE,
+  UPDATE_VALUE,
+  DELETE_VALUE 
 } from '../constants'
 
-const byId = (state = {}, action) => {
+const byDateId = (state = {}, action) => {
 
-  const dimension = action.payload
+  const value = action.payload
 
   switch(action.type) {
 
-    case CREATE_DIMENSION:
+    case CREATE_VALUE:
       return {
         ...state,
-        [dimension.uid] : dimension
+        [value.uid] : value
       }
 
-    case UPDATE_DIMENSION:
+    case UPDATE_VALUE:
       return {
         ...state,
-        [dimension.uid] : dimension
+        [value.uid] : value
       }
     default:
       return state
@@ -28,15 +28,14 @@ const byId = (state = {}, action) => {
 }
 
 const allIds = (state = [], action) => {
-
   switch(action.type) {
-    case CREATE_DIMENSION:
+    case CREATE_VALUE:
       return [
         ...state,
         action.payload.uid
       ]
 
-    case DELETE_DIMENSION:
+    case DELETE_VALUE:
       return state.filter(uid => uid !== action.payload.uid )
 
     default:
@@ -45,9 +44,9 @@ const allIds = (state = [], action) => {
 }
 
 export default combineReducers({
-  byId,
+  byDateId,
   allIds
 })
 
-export const getDimension = (state, uid) => state.byId[uid]
-export const getDimensions = state => state.allIds.map(id => state.byId[id])
+export const getValue = (state, uid) => state.byId[uid]
+export const getValues = state => state.allIds.map(id => state.byId[id])
