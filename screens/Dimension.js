@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { View, ScrollView, Text, FlatList, TouchableWithoutFeedback, KeyboardAvoidingView, Alert, Button } from 'react-native'
+import { View, ScrollView, Text, FlatList, TouchableWithoutFeedback, KeyboardAvoidingView, Alert } from 'react-native'
 import Styles, * as StyleVariables from '../Styles'
 import DimensionOption from './DimensionOption'
 import { TextInput } from 'react-native-gesture-handler';
@@ -21,10 +21,11 @@ const mapStateToProps = (state, props) => {
   const uid = props.navigation.state.params.dimensionId
   const dimension = uid ? getDimension(state, uid) : null
   if(dimension) {
-    dimension.options = dimension ? Object.keys(dimension.options).map(key => ({
-      key,
-      ...dimension.options[key]
-    })) : []
+    dimension.options = dimension.options ? 
+      Object.keys(dimension.options).map(key => ({
+        key,
+        ...dimension.options[key]
+      })) : []
   }
 
   return {
@@ -314,6 +315,13 @@ class Dimension extends React.PureComponent {
       >
 
         {this._renderHeader()}
+
+        {isUnqualified && (
+          <View style={{ flex: 1 }}>
+            <Text>Please choose the kind of dimension you want to set.</Text>
+            <Text>It can be either a list of options, or a numerical range.</Text>
+          </View>
+        )}
         
         {!this.state.isNew && !isNumeric && this._renderOptionList()}
         

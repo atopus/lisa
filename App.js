@@ -32,6 +32,15 @@ const RootStack = createStackNavigator({
   Dimension: Dimension
 })
 
+if(module.hot) {
+  module.hot.accept(() => {
+    const nextRootReducer = require('./reducers')
+    store.replaceReducer(
+      persistReducer(persistConfig, nextRootReducer)
+    )
+  })
+}
+
 export default class App extends React.PureComponent {
 
   render() {

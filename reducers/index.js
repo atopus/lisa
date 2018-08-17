@@ -52,14 +52,28 @@ const home = (state = { date : moment().format('YYYYMMDD') }, action) => {
 export default combineReducers({
   app,
   home,
-  dimensions
+  dimensions,
+  options,
+  values
 })
 
 export const getDimensions = state => 
   fromDimensions.getDimensions(state.dimensions)
 
-export const getDimension = (state, uid) => 
-  fromDimensions.getDimension(state.dimensions, uid)
+export const getDimension = (state, uid, full) => {
+  const dimension = fromDimensions.getDimension(state.dimensions, uid)
+  if(full) {
+    dimension.options = getOptions(state, uid)
+    dimension.values = getValues(state, uid)
+  }
+  return dimension
+}
+
+export const getDimensionOrder = state =>
+  fromDimensions.getDimensionOrder(state.dimensions)
+
+export const getDimensionIds = state => 
+  fromDimensions.getDimensionIds(state.dimensions)
 
 export const getValues = (state, uid) => 
   fromValues.getValues(state.values, uid)
@@ -75,11 +89,11 @@ export const getValuesMap = (state, uid) => {
 export const getValue = (state, uid, date) => 
   fromValues.getValue(state.values, uid, date)
 
-export const getOptions = (state, uid) => 
-  fromOptions.getOptions(state.options, uid)
+export const getOptions = (state, dimensionId) => 
+  fromOptions.getOptions(state.options, dimensionId)
 
 export const getOption = (state, uid, index) =>
-  fromOption.getOption(state.options, uid, index)
+  fromOptions.getOption(state.options, uid, index)
 
 export const getOptionFrequency = (state, dimensionId, value) => {
   const values = getValuesMap(state, dimensionId)

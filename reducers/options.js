@@ -18,7 +18,11 @@ const byDimIdx = (state = {}, action) => {
         ...state,
         [dimension.uid] : {
           ...state[dimension.uid],
-          [o.index] : o.text
+          [o.index] : {
+            index: o.index,
+            text: o.text,
+            edit: false
+          }
         }
       }
 
@@ -58,5 +62,8 @@ export default combineReducers({
   edit
 })
 
-export const getOption = (state, dimensionId, index) => state.byId[dimensionId][index]
-export const getOptions = state => state.byId[dimensionId]
+export const getOption = (state, dimensionId, index) => 
+  state.byDimIdx[dimensionId] && state.byDimIdx[dimensionId][index]
+
+export const getOptions = (state, dimensionId) => 
+  state.byDimIdx[dimensionId]

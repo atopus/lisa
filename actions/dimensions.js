@@ -2,9 +2,9 @@ import uuidv1 from 'uuid/v1'
 import {
   CREATE_DIMENSION,
   UPDATE_DIMENSION,
+  SORT_DIMENSIONS,
   SET_VALUE,
-  CREATE_OPTION,
-  UPDATE_OPTION,
+  SET_OPTION,
   DELETE_OPTION,
   EDIT_OPTION,
   DELETE_DIMENSION
@@ -56,8 +56,14 @@ export const removeDimension = uid => ({
   }
 })
 
+// Must be checked.
+export const sortDimensions = newOrder => ({
+  type: SORT_DIMENSIONS,
+  payload: newOrder
+})
+
 export const createOption = (dimensionId, index, text) => ({
-  type: CREATE_OPTION,
+  type: SET_OPTION,
   payload: { 
     uid : dimensionId, 
     option : { index, text }
@@ -65,7 +71,7 @@ export const createOption = (dimensionId, index, text) => ({
 })
 
 export const updateOption = (dimensionId, index, text) => ({
-  type: UPDATE_OPTION,
+  type: SET_OPTION,
   payload: { 
     uid : dimensionId, 
     option : { index, text }

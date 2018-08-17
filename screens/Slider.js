@@ -19,7 +19,7 @@ moment.locale('fr');
 
 const mapStateToProps = (state, props) => {
   return {
-    dimension : getDimension(state, props.uid),
+    dimension : getDimension(state, props.uid, true),
     value : getValue(state, props.uid, getDate(state)),
     date: props.date
   }

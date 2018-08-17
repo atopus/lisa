@@ -7,7 +7,15 @@ describe('reducer', () => {
 
       const dimension1 = {
         uid: '1',
-        label: 'Label of a tested dimension'
+        label: 'Label of the first dimension'
+      }
+      const dimension2 = {
+        uid: '2',
+        label: 'Label of the second dimension'
+      }
+      const dimension3 = {
+        uid: '3',
+        label: 'Label of the third dimension'
       }
 
       it('should handle initial state', () => {
@@ -62,6 +70,27 @@ describe('reducer', () => {
         expect(result.byId).toEqual({[dimension1.uid] : updated })
         // expect(result.allIds).toEqual([dimension1.uid])
       
+      })
+
+      it('should handle SORT_DIMENSION', () => {
+
+        const state = {
+          byId: { 
+            [dimension1.uid] : dimension1,
+            [dimension2.uid] : dimension2,
+            [dimension3.uid] : dimension3,
+          },
+          allIds: [dimension1.uid, dimension2.uid, dimension3.uid]
+        }
+
+        const action = {
+          type: actions.SORT_DIMENSIONS,
+          payload: [dimension1.uid, dimension3.uid, dimension2.uid]
+        }
+
+        const result = reducer(state, action)
+        expect(result.allIds)
+          .toEqual([dimension1.uid, dimension3.uid, dimension2.uid])
       })
 
     //   it('should handle LOAD_DIMENSIONS', () => {

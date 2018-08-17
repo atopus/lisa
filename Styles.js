@@ -100,13 +100,28 @@ export default StyleSheet.create({
     paddingHorizontal: 15
   },
   list: {
-    flex: 5
+    flex: 5,
+    backgroundColor: '#FFC78A11'
   },
   header: {
     flex: 1,
     alignItems : 'center', 
     justifyContent : 'space-around',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    backgroundColor: 'white',
+
+    ...Platform.select({
+      ios: {
+        shadowColor: 'rgba(0,0,0,0.2)',
+        shadowOpacity: 1,
+        shadowOffset: {height: 2, width: 2},
+        shadowRadius: 2,
+      },
+
+      android: {
+        elevation: 5
+      },
+    })
   },
   footer : {
     flex: 1,

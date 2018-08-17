@@ -11,8 +11,8 @@ const byDimDate = (state = {}, action) => {
     case SET_VALUE:
 
       const dimension = action.payload
-      if(!dimension) throw new Error("Missing dimension")
-      if(!dimension.uid) throw new Error("Missing dimension id")
+      if(!dimension)       throw new Error("Missing dimension")
+      if(!dimension.uid)   throw new Error("Missing dimension id")
       if(!dimension.value) throw new Error("Missing value")
       const value = dimension.value
       return {
@@ -40,5 +40,5 @@ export default combineReducers({
   byDimDate,
 })
 
-export const getValue = (state, dimensionId, date) => state.byDimDate[dimensionId][date]
-export const getValues = (state, dimensionId) => state.byDimDate[dimensionId]
+export const getValue = (state, dimensionId, date) => state.byDimDate[dimensionId] && state.byDimDate[dimensionId][date] || null
+export const getValues = (state, dimensionId) => state.byDimDate[dimensionId] || {}
