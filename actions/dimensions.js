@@ -29,7 +29,7 @@ export const saveValue = (uid, date, value) => ({
   }
 });
 
-export const createDimension = label => dispatch => {
+export const createDimension = ({ label, type }) => dispatch => {
 
   const uid = uuidv1()
   
@@ -37,7 +37,8 @@ export const createDimension = label => dispatch => {
     type: CREATE_DIMENSION,
     payload: {
       uid,
-      label
+      label,
+      type
     }
   })
 
@@ -49,6 +50,7 @@ export const updateDimension = dimension => ({
   payload : dimension
 })
 
+// Should it be renamed deleteDimension for coherence ?
 export const removeDimension = uid => ({
   type: DELETE_DIMENSION,
   payload : {

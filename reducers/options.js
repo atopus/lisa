@@ -66,4 +66,8 @@ export const getOption = (state, dimensionId, index) =>
   state.byDimIdx[dimensionId] && state.byDimIdx[dimensionId][index]
 
 export const getOptions = (state, dimensionId) => 
-  state.byDimIdx[dimensionId]
+  state.byDimIdx[dimensionId] || {}
+
+export const isEditingOption = (state, dimensionId, index) =>
+  state.edit.dimensionId === dimensionId &&
+  state.edit.index === index

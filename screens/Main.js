@@ -35,13 +35,27 @@ const mapDispatchToProps = {
 
 class Main extends React.PureComponent {
 
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => ({
     title: 'Liska',
-    headerStyle : {
-      backgroundColor: StyleVariables.PRIMARY.neutral
-    },
-    headerTintColor : '#fff',
-  };
+    headerRight : (
+      <TouchableNativeFeedback
+        onPress={navigation.getParam('createDimension') }
+        hitSlop={{ top: 10, bottom: 10, left: 20, right: 0 }} 
+      >
+        <FAIcon
+          
+          name='plus'
+          color='white'
+          size={20}
+          style={{ marginRight: 15 }}
+        />
+      </TouchableNativeFeedback>
+    )
+  })
+
+  componentDidMount() {
+    this.props.navigation.setParams({ 'createDimension' : this._createDimension})
+  }
 
   /**
    * @see https://gist.github.com/mrzmyr/9ac94ca4622c1602a2a3
@@ -68,10 +82,10 @@ class Main extends React.PureComponent {
   }
 
   _createDimension = () => {
-    this.props.navigation.navigate('Dimension', { new: true })
+    this.props.navigation.navigate('CreateDimension')
   }
 
-  _renderHeader() {
+  _renderHeader = () => {
     return (
       <View style={Styles.header}>
         <TouchableNativeFeedback
@@ -126,6 +140,10 @@ class Main extends React.PureComponent {
     })
   }
 
+  _onReleaseRow = (key, newOrder) => {
+    this._onChangeOrder(newOrder)
+  }
+
   _onChangeOrder = newOrder => {
     this.props.sortDimensions(newOrder)
   }
@@ -139,16 +157,16 @@ class Main extends React.PureComponent {
           order={this.props.order}
           renderRow={this._renderRow}
           onPressRow={this._navToDim}
-          onChangeOrder={this._onChangeOrder}
+          onReleaseRow={this._onReleaseRow}
         />
-        <View style={{ alignItems : 'center', paddingBottom: 5 }}>
-          <FAIcon.Button
-            name='plus'
-            backgroundColor={StyleVariables.primary}
-            onPress={this._createDimension}>
-              Create dimension
-            </FAIcon.Button>
-        </View>
+      </View>
+    )
+  }
+
+  _renderBody() {
+    return (
+      <View style={ Styles.body }>
+        {this._renderList()}
       </View>
     )
   }
@@ -158,7 +176,7 @@ class Main extends React.PureComponent {
     return (
       <View style={Styles.container}>
         {this._renderHeader()}
-        {this._renderList()}
+        {this._renderBody()}
       </View>
     )}
 }

@@ -11,7 +11,8 @@ import {
 } from '../actions/dimensions'
 import {
   getOption,
-  getOptionFrequency
+  getOptionFrequency,
+  isEditingOption
 } from '../reducers'
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 
@@ -19,8 +20,9 @@ const mapStateToProps = (state, props) => ({
   dimensionId: props.dimensionId,
   index: props.index,
   option: getOption(state, props.dimensionId, props.index),
-  frequency: getOptionFrequency(state, props.dimensionId, props.index)
-});
+  frequency: getOptionFrequency(state, props.dimensionId, props.index),
+  editing: isEditingOption(state, props.dimensionId, props.index)
+})
 
 const mapDispatchToProps = ({
   updateOption,
@@ -34,10 +36,9 @@ class DimensionOption extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      edit : props.new || (props.option && props.option.edit) || false,
+      edit : props.new || props.editing || false,
       text: props.option ? props.option.text : '',
-      new : props.new || false,
-      index: props.index
+      new : props.new || false
     }
   }
 
@@ -58,10 +59,11 @@ class DimensionOption extends React.PureComponent {
       )
       this.props.editOption(this.props.dimensionId, this.props.index, false)
     }
+    this.props.onSubmitOption()
   }
 
   _editOption = () => {
-    this.props.editOption(this.props.dimensionId, this.props.index, false)
+    this.props.editOption(this.props.dimensionId, this.props.index)
   }
 
   _onDelete = () => {
@@ -76,7 +78,10 @@ class DimensionOption extends React.PureComponent {
 
     const canDelete = this.props.frequency === 0
 
-    const text = !this.props.option || this.props.option.edit ? (
+    const text = 
+      !this.props.option || 
+      this.props.option.edit || 
+      this.props.editing ? (
 
       // Text Input
       <View style={ styles.textWrapper } >

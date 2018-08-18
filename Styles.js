@@ -1,5 +1,6 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, Dimensions } from 'react-native';
 
+const window = Dimensions.get('window');
 // Color scheme
 // http://paletton.com/#uid=50B0u0kp5F+eGQPkjL1uKBG-5rp
 
@@ -51,6 +52,33 @@ export default StyleSheet.create({
       },
     }),
   },
+  header: {
+    flex: 1,
+    alignItems : 'center', 
+    justifyContent : 'space-around',
+    flexDirection: 'row',
+    backgroundColor: 'white',
+
+    ...Platform.select({
+      ios: {
+        shadowColor: 'rgba(0,0,0,0.2)',
+        shadowOpacity: 1,
+        shadowOffset: {height: 2, width: 2},
+        shadowRadius: 2,
+      },
+
+      android: {
+        elevation: 5
+      },
+    })
+  },
+  body : {
+    flex: 5
+  },
+  footer : {
+    flex: 1,
+    alignItems: 'center'
+  },
   contentContainer: {
     width: window.width,
 
@@ -61,10 +89,10 @@ export default StyleSheet.create({
 
       android: {
         paddingHorizontal: 0,
+        paddingVertical: 10
       }
     })
   },
-
   row: {
     flex: 1,
     marginTop: 7,
@@ -103,30 +131,6 @@ export default StyleSheet.create({
     flex: 5,
     backgroundColor: '#FFC78A11'
   },
-  header: {
-    flex: 1,
-    alignItems : 'center', 
-    justifyContent : 'space-around',
-    flexDirection: 'row',
-    backgroundColor: 'white',
-
-    ...Platform.select({
-      ios: {
-        shadowColor: 'rgba(0,0,0,0.2)',
-        shadowOpacity: 1,
-        shadowOffset: {height: 2, width: 2},
-        shadowRadius: 2,
-      },
-
-      android: {
-        elevation: 5
-      },
-    })
-  },
-  footer : {
-    flex: 1,
-    alignItems: 'center'
-  },
   textInput : {
     backgroundColor:'white', 
     borderColor: 'white',
@@ -136,7 +140,8 @@ export default StyleSheet.create({
     color: 'grey'
   },
   h1 : {
-    fontSize: 40
+    fontSize: 40,
+    color: PRIMARY.darker
   },
   h2 : {
     fontSize: 24
@@ -146,11 +151,18 @@ export default StyleSheet.create({
   },
   p : {
     color: grey,
-    fontSize: 16
+    fontSize: 16,
+    paddingVertical: 5
   },
   separator : {
     backgroundColor: '#eee',
     height: 1
+  },
+  semiSeparator : {
+    width: window.width / 2,
+    height: 3,
+    backgroundColor: PRIMARY.lighter,
+    marginHorizontal: window.width / 4
   },
   buttonIcon : {
     padding: 5 // Use padding to enlarge touchable area.

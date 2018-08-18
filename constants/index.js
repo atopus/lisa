@@ -23,3 +23,6 @@ export const DELETE_VALUE = 'DELETE_VALUE'
 
 export const SET_DIMENSION_THRESHOLD = 'SET_DIMENSION_THRESHOLD'
 export const SET_DATE = 'SET_DATE'
+
+export const ORDINAL = 1
+export const NUMERICAL = 2

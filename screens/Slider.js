@@ -3,12 +3,13 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Text, View, Slider, Alert, Animated, Platform, Easing } from 'react-native'
 import Styles, * as StyleVariables from '../Styles'
-import * as Dimension from '../models/Dimension'
+import { NUMERICAL, ORDINAL } from '../constants'
 
 import {
   getDate,
   getValue,
-  getDimension
+  getDimension,
+  getOptions
 } from '../reducers';
 import {
   saveValue
@@ -17,9 +18,14 @@ import {
 import moment from 'moment/min/moment-with-locales';
 moment.locale('fr');
 
+_dictOptionsToMap = options => {
+  return Object.keys(options).map(key => options[key] )
+}
+
 const mapStateToProps = (state, props) => {
   return {
     dimension : getDimension(state, props.uid, true),
+    options: getOptions(state, props.uid),
     value : getValue(state, props.uid, getDate(state)),
     date: props.date
   }
@@ -133,32 +139,34 @@ class SliderComponent extends React.PureComponent {
     let min = 0 
     let max = 0
     let valueLabel = 'No label applicable'
+    let disabled = true
+    
+    if(d.type === ORDINAL){
 
-    // unQualified
-    if(!Dimension.isUnqualified(d)) {
-      if(Dimension.isRanking(d)){
+      const options = _dictOptionsToMap(this.props.options)
+      const indices = options.map(option => option.index)
+      min = Math.min.apply(0, indices)
+      max = Math.max.apply(0, indices)
+      valueLabel = this._getOptionLabel(value, options)
+      disabled = options.length < 2
 
-        const indices = d.options.map(option => option.index)
-        min = Math.min.apply(0, indices)
-        max = Math.max.apply(0, indices)
-        valueLabel = this._getOptionLabel(value, d.options)
+    } else if(d.type === NUMERICAL) {
 
-      } else if(Dimension.isNumeric(d)) {
-
-        min = d.min
-        max = d.max
-        valueLabel = this._getNumericLabel(value, d.unit)
-        
-      } else {
-        throw new Error("unknown dimension type "+d.label)
-      }
+      min = d.min
+      max = d.max
+      valueLabel = this._getNumericLabel(value, d.unit)
+      disabled = 
+        min === undefined || min === null ||
+        max === undefined || max === null ||
+        min === max
+      
+    } else {
+      throw new Error("Unrecognized dimension type "+d.type)
     }
 
     const color = this._getColor(value, d.thresholds);
     const sliderValue = value !== false ? value : 0
     const label = (value !== false && value !== undefined && value !== null) ? valueLabel : '\u2754'
-
-    const disabled = !Dimension.isEnabled(d)
 
     return (
       <Animated.View style={[ 
@@ -195,7 +203,8 @@ class SliderComponent extends React.PureComponent {
 SliderComponent.propTypes = {
   dimension: PropTypes.object.isRequired,
   value: PropTypes.number,
-  date: PropTypes.string.isRequired
+  date: PropTypes.string.isRequired,
+  options: PropTypes.object.isRequired
 }
 
 export default connect(

@@ -11,8 +11,14 @@ import storage from 'redux-persist/lib/storage'
 
 import Main from './screens/Main'
 import Dimension from './screens/Dimension'
+import CreateDimension from './screens/CreateDimension'
+import * as StyleVariables from './Styles'
 
 const middleware = applyMiddleware(thunk);
+
+const _PERSIST = true
+const _HOTRELOAD = true
+const _PURGE = false
 
 const persistConfig = {
   key: 'liska',
@@ -26,13 +32,26 @@ const store = createStore(
   composeWithDevTools(middleware)  
 )
 const persistor = persistStore(store)
+if(_PURGE) persistor.purge()
 
-const RootStack = createStackNavigator({
-  Home: Main,
-  Dimension: Dimension
-})
+const RootStack = createStackNavigator(
+  {
+    Home: Main,
+    Dimension: Dimension,
+    CreateDimension: CreateDimension
+  },
+  {
+    initialRouteName: 'Home',
+    navigationOptions: {
+      headerStyle : {
+        backgroundColor: StyleVariables.PRIMARY.neutral
+      },
+      headerTintColor : '#fff'
+    }
+  }
+)
 
-if(module.hot) {
+if(module.hot && _HOTRELOAD) {
   module.hot.accept(() => {
     const nextRootReducer = require('./reducers')
     store.replaceReducer(
@@ -46,9 +65,14 @@ export default class App extends React.PureComponent {
   render() {
     return (
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
+        {_PERSIST ? (
+          <PersistGate loading={null} persistor={persistor}>
           <RootStack />
         </PersistGate>
+        ) : (
+          <RootStack />
+        )}
+        
       </Provider>
     );
   }

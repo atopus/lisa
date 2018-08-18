@@ -103,6 +103,9 @@ export const getOptionFrequency = (state, dimensionId, value) => {
   return result
 }
 
+export const isEditingOption = (state, dimensionId, index) =>
+  fromOptions.isEditingOption(state.options, dimensionId, index)
+
 export const getThresholds = (state, uid) =>
   fromDimensions.getThresholds(state.dimensions, uid)
 

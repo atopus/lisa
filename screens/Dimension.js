@@ -1,12 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { View, ScrollView, Text, FlatList, TouchableWithoutFeedback, KeyboardAvoidingView, Alert } from 'react-native'
+import { View, ScrollView, Text, FlatList, TouchableWithoutFeedback, TouchableNativeFeedback, KeyboardAvoidingView, Alert } from 'react-native'
 import Styles, * as StyleVariables from '../Styles'
 import DimensionOption from './DimensionOption'
 import { TextInput } from 'react-native-gesture-handler';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
-import * as Dim from '../models/Dimension'
+
+import { ORDINAL, NUMERICAL } from '../constants'
 
 import {
   getDimension
@@ -19,8 +20,8 @@ import {
 
 const mapStateToProps = (state, props) => {
   const uid = props.navigation.state.params.dimensionId
-  const dimension = uid ? getDimension(state, uid) : null
-  if(dimension) {
+  const dimension = uid ? getDimension(state, uid, true) : null
+  if(dimension && dimension.type === ORDINAL ) {
     dimension.options = dimension.options ? 
       Object.keys(dimension.options).map(key => ({
         key,
@@ -30,8 +31,8 @@ const mapStateToProps = (state, props) => {
 
   return {
     uid,
-    dimension,
-    new : Boolean(props.navigation.state.params.new) || false
+    dimension
+    // new : Boolean(props.navigation.state.params.new) || false
   } 
 }
 
@@ -57,31 +58,39 @@ class Dimension extends React.PureComponent {
       step: _d && _exists(_d.step)  ? _d.step : '',
       unit: _d && _d.unit || '',
       edit: props.navigation.state.params.new || false,
-      isNew: props.navigation.state.params.new || false,
       newOption: false,
     }
   }
   static navigationOptions = ({ navigation }) => ({
     title: 'Dimension',
-    headerStyle : {
-      backgroundColor: StyleVariables.PRIMARY.neutral
-    },
-    headerTintColor : '#fff'
+    headerRight : (
+      <TouchableNativeFeedback
+        onPress={navigation.getParam('deleteDimension') }
+        hitSlop={{top: 10, bottom: 10, left: 20, right: 0}} 
+      >
+        <FAIcon 
+          name='trash'
+          color='white'
+          size={20}
+          style={{ marginRight: 15 }}
+        />
+      </TouchableNativeFeedback>
+    )
   })
+
+  componentDidMount() {
+    this.props.navigation.setParams({ deleteDimension : this._onDeleteConfirm })
+  }
 
   _onSubmit = () => {
 
-    if(this.state.isNew) {
-      const uid = this.props.createDimension(this.state.label)
-      this.props.navigation.navigate('Dimension', { dimensionId: uid })
-    } else {
+    if(this.state.label !== this.props.dimension.label) {
       this.props.updateDimension({ 
         ...this.props.dimension, 
         label:  this.state.label,
       })
     }
-
-    this.setState({ edit: false, isNew : false })
+    this.setState({ edit: false })
   }
 
   _onCancel = () => {
@@ -90,10 +99,6 @@ class Dimension extends React.PureComponent {
 
   _edit = () => {
     this.setState({ edit: true })
-  }
-
-  _onCreateOption = () => {
-    this.setState({ newOption : true })
   }
 
   _onDeleteConfirm = () => {
@@ -114,19 +119,12 @@ class Dimension extends React.PureComponent {
     ) 
   }
 
-  _onSubmitNumericForm = () => {
-
-    const min  = _exists(this.state.min) ? parseInt(this.state.min)    : null
-    const max  = _exists(this.state.max) ? parseInt(this.state.max)    : null
-    const step = this.state.step ? parseInt(this.state.step)  : null
-    const unit = this.state.unit
-
-    this.props.updateDimension({ ...this.props.dimension, min, max, step, unit})
-
-    this.props.navigation.navigate('Home')
+  _onSubmitOption = () => {
+    this.setState({ newOption : false })
   }
 
   _renderHeader() {
+
     return this.state.edit ? (
       <View style={ Styles.header } >
         <View style={{ width: '80%' }}>
@@ -134,9 +132,8 @@ class Dimension extends React.PureComponent {
             underlineColorAndroid={StyleVariables.lightgrey}
             style={ [Styles.textInput, Styles.h1 ] }
             onChangeText={label => this.setState({ label }) }
-          >
-            {this.state.label}
-          </TextInput>
+            value={this.state.label}
+          />
         </View>
         <View style={{ width: '20%', flexDirection: 'row', flex:1, justifyContent: 'space-around' }}>
           <FAIcon
@@ -147,15 +144,13 @@ class Dimension extends React.PureComponent {
             onPress={this._onSubmit}
             disabled={!this.state.label || !this.state.label.trim()} 
           />
-          {!this.state.isNew && (
-            <FAIcon
-              style={ Styles.buttonIcon }
-              size={20}
-              name='ban'
-              color={ StyleVariables.warning }
-              onPress={this._onCancel}
-            />
-          )}
+          <FAIcon
+            style={ Styles.buttonIcon }
+            size={20}
+            name='ban'
+            color={ StyleVariables.warning }
+            onPress={this._onCancel}
+          />
         </View>
       </View>
     ) : (
@@ -169,14 +164,21 @@ class Dimension extends React.PureComponent {
     )
   }
 
+  _onCreateOption = () => {
+    this.setState({ 
+      newOption : true 
+    })
+  }
+
   _renderOptionList() {
 
     const newIndex = 
-      this.props.dimension && this.props.dimension.options.length > 0 ?
+      this.props.dimension.options &&
+      this.props.dimension.options.length > 0 ?
         Math.max.apply(1, this.props.dimension.options.map(o => parseInt(o.index))) + 1 :
         0
 
-    const options = this.props.dimension ? this.props.dimension.options : []
+    const options = this.props.dimension.options ? this.props.dimension.options : []
 
     return (
       <View style={{ flex: 5 }}>
@@ -185,8 +187,8 @@ class Dimension extends React.PureComponent {
           {options.length > 0 && (
             <FlatList
               ItemSeparatorComponent={({highlighted}) => (
-                    <View style={[Styles.separator, highlighted && {marginLeft: 0}]} />
-                )}
+                <View style={[Styles.separator, highlighted && {marginLeft: 0}]} />
+              )}
               data={options}
               renderItem={({item}) => (
                 <DimensionOption 
@@ -203,13 +205,14 @@ class Dimension extends React.PureComponent {
               new={true}
               dimensionId={this.props.uid}
               index={newIndex}
+              onSubmitOption={this._onSubmitOption}
             />) : (
             <View style={{ alignItems : 'center', flex: 1 }}>
               <FAIcon.Button
                 name='plus'
                 backgroundColor={ StyleVariables.primary } 
                 onPress={this._onCreateOption}>
-                  Create option
+                Create option
               </FAIcon.Button>
             </View>
           )}
@@ -219,12 +222,34 @@ class Dimension extends React.PureComponent {
     )
   }
 
+  _onSubmitNumericForm = () => {
+
+    const min  = _exists(this.state.min) ? parseInt(this.state.min)    : null
+    const max  = _exists(this.state.max) ? parseInt(this.state.max)    : null
+    const step = this.state.step ? parseInt(this.state.step)  : null
+    const unit = this.state.unit
+
+    this.props.updateDimension({ ...this.props.dimension, min, max, step, unit})
+
+    this.props.navigation.navigate('Home')
+  }
+
   _renderNumericForm() {
+
+    const flexLabel = 1
+    const flexInput = 2
+
     return (
+
       <View style={{ flex: 3, paddingVertical: 10, paddingHorizontal: 15 }}>
 
-        <View style={{ flex: 1, flexDirection:'row', alignContent: 'center' }}>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{ 
+          flex: 1, 
+          flexDirection:'row', 
+          alignContent: 'center',
+          backgroundColor: 'white'
+        }}>
+          <View style={{ flex: flexLabel, alignItems: 'center', justifyContent: 'center'}}>
             <Text style={[ { justifyContent: 'center' }, Styles.h3 ]}>
               Minimum : 
             </Text>
@@ -232,7 +257,7 @@ class Dimension extends React.PureComponent {
           <TextInput 
             placeholder="Set the minimum value"
             underlineColorAndroid={StyleVariables.lightgrey}
-            style={ [{ flex: 1, alignItems:'center',backgroundColor: 'blue' }, Styles.textInput, Styles.h3 ] }
+            style={ [{ flex: flexInput, alignItems:'center',backgroundColor: 'blue' }, Styles.textInput, Styles.h3 ] }
             onChangeText={min => this.setState({ min })}
             value={_exists(this.state.min) ? this.state.min.toString() : ''}
             length={3}
@@ -241,7 +266,7 @@ class Dimension extends React.PureComponent {
         </View>
 
         <View style={{ flexDirection:'row', flex: 1, alignContent: 'center' }}>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <View style={{ flex: flexLabel, alignItems: 'center', justifyContent: 'center'}}>
             <Text style={[ { justifyContent: 'center' }, Styles.h3 ]}>
               Maximum :
             </Text>
@@ -249,7 +274,7 @@ class Dimension extends React.PureComponent {
           <TextInput 
             placeholder="Set the maximum value"
             underlineColorAndroid={StyleVariables.lightgrey}
-            style={ [{ flex: 1, alignItems:'center' }, Styles.textInput, Styles.h3 ] }
+            style={ [{ flex: flexInput, alignItems:'center' }, Styles.textInput, Styles.h3 ] }
             onChangeText={max => this.setState({ max })}
             value={_exists(this.state.max) ? this.state.max.toString() : ''}
             length={3}
@@ -258,7 +283,7 @@ class Dimension extends React.PureComponent {
         </View>
 
         <View style={{ flexDirection:'row', flex: 1, alignContent: 'center' }}>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <View style={{ flex: flexLabel, alignItems: 'center', justifyContent: 'center'}}>
             <Text style={[ { justifyContent: 'center' }, Styles.h3 ]}>
               Step :
             </Text>
@@ -266,7 +291,7 @@ class Dimension extends React.PureComponent {
           <TextInput
             placeholder="Optionally, you can set a step"
             underlineColorAndroid={StyleVariables.lightgrey}
-            style={ [{ flex: 1, alignItems:'center' }, Styles.textInput, Styles.h3 ] }
+            style={ [{ flex: flexInput, alignItems:'center' }, Styles.textInput, Styles.h3 ] }
             onChangeText={step => this.setState({ step })}
             value={''+this.state.step}
             length={3}
@@ -274,7 +299,7 @@ class Dimension extends React.PureComponent {
           />
         </View>
         <View style={{ flexDirection:'row', flex: 1, alignContent: 'center' }}>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <View style={{ flex: flexLabel, alignItems: 'center', justifyContent: 'center'}}>
             <Text style={[ { justifyContent: 'center' }, Styles.h3 ]}>
               Unit :
             </Text>
@@ -282,7 +307,7 @@ class Dimension extends React.PureComponent {
           <TextInput 
             placeholder="Optionally, you can set a unit"
             underlineColorAndroid={StyleVariables.lightgrey}
-            style={ [{ flex: 1, alignItems:'center' }, Styles.textInput, Styles.h3 ] }
+            style={ [{ flex: flexInput, alignItems:'center' }, Styles.textInput, Styles.h3 ] }
             onChangeText={unit => this.setState({ unit })}
             value={this.state.unit}
           />
@@ -299,55 +324,43 @@ class Dimension extends React.PureComponent {
     )
   }
 
-  render() {
+  _renderBody = () => {
 
-    const canDelete = !this.props.new
     const _d = this.props.dimension
-    const isNumeric = _d && Dim.isNumeric(_d)
-    const isRanking = _d && Dim.isRanking(_d)
-    const isUnqualified = _d && Dim.isUnqualified(_d)
+    const isNumeric = _d.type === NUMERICAL
+    // const isOrdinal = _d.type === ORDINAL
+
+    return (
+      <TouchableWithoutFeedback
+        onPress={this._onSubmit}
+      >
+      <View style={ Styles.body }>
+        {isNumeric ? this._renderNumericForm() : this._renderOptionList() }
+      </View>
+      </TouchableWithoutFeedback>
+    )
+  }
+
+  render() {
 
     return (
       <KeyboardAvoidingView 
         style={ Styles.container } 
         behavior="padding" enabled
-        keyboardVerticalOffset={50}
+        keyboardVerticalOffset={100}
       >
 
         {this._renderHeader()}
-
-        {isUnqualified && (
-          <View style={{ flex: 1 }}>
-            <Text>Please choose the kind of dimension you want to set.</Text>
-            <Text>It can be either a list of options, or a numerical range.</Text>
-          </View>
-        )}
-        
-        {!this.state.isNew && !isNumeric && this._renderOptionList()}
-        
-        {(isNumeric || isUnqualified ) && this._renderNumericForm()}
-
-        {canDelete && (
-          <View style={ Styles.footer }>
-            <FAIcon.Button 
-              style={{ width: '50%'}} 
-              name='trash'
-              backgroundColor={StyleVariables.danger}
-              onPress={this._onDeleteConfirm}        
-            >
-              Delete dimension
-            </FAIcon.Button>
-          </View>
-        )}
+        {this._renderBody()}
 
       </KeyboardAvoidingView>
     )
   }
 }
 
+
 Dimension.propTypes = {
-  dimension : PropTypes.object,
-  new: PropTypes.bool.isRequired
+  dimension : PropTypes.object
 }
 
 export default connect(
