@@ -1,6 +1,6 @@
 export default migration0 = state => {
 
-  const allDimensionIds = state.dimensions.map(d => d.uid)
+  const allDimensionIds = state.dimensions.dimensions.map(d => d.uid)
   const dimensionById = {}
   const valueByDimDate = {}
   const optionByDimIdx = {}
