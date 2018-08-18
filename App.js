@@ -6,13 +6,14 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import { PersistGate } from 'redux-persist/integration/react'
 import { createStackNavigator } from 'react-navigation'
 import rootReducer from './reducers'
-import { persistStore, persistReducer } from 'redux-persist'
+import { persistStore, persistReducer, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import Main from './screens/Main'
 import Dimension from './screens/Dimension'
 import CreateDimension from './screens/CreateDimension'
 import * as StyleVariables from './Styles'
+import migrations from './migrations';
 
 const middleware = applyMiddleware(thunk);
 
@@ -22,7 +23,9 @@ const _PURGE = false
 
 const persistConfig = {
   key: 'liska',
+  version: 0,
   storage,
+  migrate: createMigrate(migrations, { debug: true } )
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
