@@ -115,6 +115,8 @@ class SliderComponent extends React.PureComponent {
       const option = options.find(option => option.index === value)
       
       if(!option) {
+        // The first version did not successfully handle various state version
+        // persisted in store. This error message should be erased asap.
         Alert.alert(
           "Internal Error", 
           `Sorry, could not find value ${value} for dimension ${this.props.dimension.uid}. Therefore it has been skipped. I may be due to a corrupted data. Please notify the author of this app if this problem persits.`, 

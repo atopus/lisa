@@ -207,10 +207,10 @@ class Dimension extends React.PureComponent {
               index={newIndex}
               onSubmitOption={this._onSubmitOption}
             />) : (
-            <View style={{ alignItems : 'center', flex: 1 }}>
+            <View style={{ alignItems : 'center', flex: 1, padding: 10 }}>
               <FAIcon.Button
                 name='plus'
-                backgroundColor={ StyleVariables.primary } 
+                backgroundColor={ StyleVariables.primary} 
                 onPress={this._onCreateOption}>
                 Create option
               </FAIcon.Button>

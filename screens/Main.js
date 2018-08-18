@@ -140,6 +140,20 @@ class Main extends React.PureComponent {
     })
   }
 
+  /**
+   * This projet use a custom forked version of react-native-sortable-list.
+   * 
+   * onChangeOrder is called each time a row is swapped with another one, while 
+   * dragging.
+   * This triggers the rerendering of the whole list, and the sorting process 
+   * by the user is interrupted.
+   * Another solution would be to wait for the end of the dragging operation, 
+   * and use the onReleaseRow callback.
+   * In order to persist the order (for instance in a Redux store), the 
+   * callback thus needs to get the new list order.
+   * 
+   * @see PR https://github.com/gitim/react-native-sortable-list/pull/117
+   */
   _onReleaseRow = (key, newOrder) => {
     this._onChangeOrder(newOrder)
   }

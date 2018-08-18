@@ -113,10 +113,10 @@ class DimensionOption extends React.PureComponent {
           />
         </View>
       </View>
+
     ) : (
 
       // Label
-      
       <TouchableWithoutFeedback onPress={this._editOption} >
 
         <View style={ styles.textWrapper }>
@@ -137,7 +137,6 @@ class DimensionOption extends React.PureComponent {
           )}
         </View>
       </TouchableWithoutFeedback>
-    
     )
 
     return (

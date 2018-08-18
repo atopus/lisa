@@ -92,34 +92,5 @@ describe('reducer', () => {
         expect(result.allIds)
           .toEqual([dimension1.uid, dimension3.uid, dimension2.uid])
       })
-
-    //   it('should handle LOAD_DIMENSIONS', () => {
-
-    //     const state = []
-    //     const d1 = {
-    //       uid: '1',
-    //       label: 'Dimension 1'
-    //     }
-    //     const d2 = {
-    //       uid: '2',
-    //       label: 'Dimension 2'
-    //     }
-    //     const d3 = {
-    //       uid: '3',
-    //       label: 'Dimension 3'
-    //     }
-    //     const action = {
-    //       type: actions.LOAD_DIMENSIONS,
-    //       payload: [d1, d2, d3]
-    //     }
-
-    //     const result = reducer(state, action)
-    //     expect(result.byId).toEqual({
-    //       [d1.uid] : d1, 
-    //       [d2.uid] : d2, 
-    //       [d3.uid] : d3
-    //     })
-    //     expect(result.allIds).toEqual([d1.uid, d2.uid, d3.uid])
-      // })
     })
   })

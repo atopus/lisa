@@ -7,53 +7,44 @@ Liska is a two-fold side-project :
 
 ## Features
 
-Liska is a one-screen mobile app that records numeric variables on a day-to-day basis, along with a few generic dimensions : 
-
-* Get to work ;
-* Realisation ;
-* Methodology ;
-* Focus ;
-* self-consciousness ;
-
-and along the main knowledge fields, like :
-
-* Mathematics ;
-* French (because i'm french) ;
-* History ;
-* and english.
-
-Other fields will soon be added to comply with the french Education Nationale teaching program.
-
-## Data
-
-A full working data set is provided in french.
-
-Data can be edited from the file `./fixtures/data.js`.
+Liska is a mobile app that records numeric and ordinal variables on a day-to-day basis.
 
 ## Setup
 
 create-react-native-app has been used to create the repo. 
 
-Simply git clone this repo, and run `yarn install`.
+1. git clone this repo, 
+2. Inside of the project folder, run `yarn install`, then `yarn start` ;
+3. Download Expo on your device, and flash the QR code.
+
+## Changelog
+
+* 0.1 : Basic implementation with ordinal variables ;
+* 0.2 : Add numerical variables support, drag and drop dimension sorting, redux migration capabilities
 
 ## Roadmap
 
-Quality improvments :
+These features are somewhere in the roadmap :
 
-* Webpack integration ;
-* Tests coverage ;
-* Documentation ;
+* Internationalization (at least french & english) ;
+* Set objectives ;
+* Compute probability to achieve the goal ;
+* Add push notifications ;
+* online account & offline capabilities.
 
-Features :
+# Credits
 
-* Update & create new dimensions & modalities ;
-* Graphics ;
-* customable notification ;
-* online sync, with redux & redux-offline ;
+My daughter designed the graphics and set the color scheme.
 
-Later :
+# Dependencies
 
-* Internationalization ;
+Most notables dependencies are :
+
+* expo
+* react & react-native
+* react-native-storage-list
+* redux
+* redux-persist
 
 ## Contributions
 

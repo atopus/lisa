@@ -7,13 +7,14 @@ export default migration0 = state => {
   const valueByDimDate = {}
   const optionByDimIdx = {}
 
-  // Iterate over dimensions.
+  // Iterate over dimensions and populate all new objects.
   oldDimensions.forEach(dim => {
 
     // Handling dimensions
     dimensionById[dim.uid] = {
       label: dim.label,
-      type: 1 // Only ORDINAL variable type for the -1 version.
+      type: 1, // Only ORDINAL variable type for the -1 version.
+      uid: dim.uid
     }
 
     // Handling values
@@ -48,7 +49,6 @@ export default migration0 = state => {
   // Return new state.
   const newState = {
     app: { ... state.app },
-    // Only date.
     home: { ...state.home },
     dimensions: newDimensions,
     options: newOptions,

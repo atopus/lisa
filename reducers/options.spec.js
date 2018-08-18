@@ -4,10 +4,6 @@ import * as actions from '../constants'
 describe('reducer', () => {
   describe('handle dimension options', () => {
 
-    // const dimension = {
-    //   uid: '1',
-    //   label: 'Label of a tested dimension'
-    // }
     const option1 = {
       index: 1,
       text : "This is my very first option."
